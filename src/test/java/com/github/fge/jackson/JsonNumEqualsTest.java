@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -17,6 +20,7 @@ import static org.testng.Assert.*;
 
 public final class JsonNumEqualsTest
 {
+    private static final JsonNodeFactory FACTORY = JsonNodeFactory.instance;
     private final JsonNode testData;
 
     public JsonNumEqualsTest()
@@ -52,5 +56,29 @@ public final class JsonNumEqualsTest
         final JsonNode node)
     {
         assertTrue(JsonNumEquals.getInstance().equivalent(reference, node));
+    }
+
+    @Test(dataProvider = "getInputs")
+    public void numericEqualityWorksWithinArrays(final JsonNode reference,
+        final JsonNode node)
+    {
+        final ArrayNode node1 = FACTORY.arrayNode();
+        node1.add(reference);
+        final ArrayNode node2 = FACTORY.arrayNode();
+        node2.add(node);
+
+        assertTrue(JsonNumEquals.getInstance().equivalent(node1, node2));
+    }
+
+    @Test(dataProvider = "getInputs")
+    public void numericEqualityWorksWithinObjects(final JsonNode reference,
+        final JsonNode node)
+    {
+        final ObjectNode node1 = FACTORY.objectNode();
+        node1.put("foo", reference);
+        final ObjectNode node2 = FACTORY.objectNode();
+        node2.put("foo", node);
+
+        assertTrue(JsonNumEquals.getInstance().equivalent(node1, node2));
     }
 }
