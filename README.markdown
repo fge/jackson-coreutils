@@ -72,7 +72,7 @@ You can also use this package to add `JsonNode` instances to a set:
 
 ```java
 final Equivalence<JsonNode> eq = JsonNumEquals.getInstance();
-// Note: uses Guava's Sets. This package depends on Guava anyway.
+// Note: uses Guava's Sets to create the set
 final Set<Equivalence.Wrapper<JsonNode>> set
     = Sets.newHashSet();
 
