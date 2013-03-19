@@ -19,7 +19,7 @@
     <groupId>com.github.fge</groupId>
     <artifactId>jackson-numequals</artifactId>
     <name>jackson-numequals</name>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <description>Recursive mathematical equivalence for Jackson's numeric JsonNode instances</description>
     <url>https://github.com/fge/jackson-numequals</url>
