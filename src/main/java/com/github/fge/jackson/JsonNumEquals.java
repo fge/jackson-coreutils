@@ -15,10 +15,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.github.fge.jsonschema.util.equivalence;
+package com.github.fge.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.fge.jsonschema.util.NodeType;
 import com.google.common.base.Equivalence;
 import com.google.common.collect.Sets;
 
@@ -38,14 +37,13 @@ import java.util.Set;
  * values are equal if their mathematical value is the same. This class
  * enforces this kind of equality.</p>
  */
-// TODO: use better hash functions for arrays and objects
-public final class JsonSchemaEquivalence
+public final class JsonNumEquals
     extends Equivalence<JsonNode>
 {
     private static final Equivalence<JsonNode> INSTANCE
-        = new JsonSchemaEquivalence();
+        = new JsonNumEquals();
 
-    private JsonSchemaEquivalence()
+    private JsonNumEquals()
     {
     }
 
