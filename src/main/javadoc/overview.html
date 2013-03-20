@@ -1,0 +1,61 @@
+<!--
+  ~ Copyright (c) 2013, Francis Galiegue <fgaliegue@gmail.com>
+  ~
+  ~ This program is free software: you can redistribute it and/or modify
+  ~ it under the terms of the Lesser GNU General Public License as
+  ~ published by the Free Software Foundation, either version 3 of the
+  ~ License, or (at your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~ GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>JSON core utilities for Jackson</title>
+</head>
+<body>
+
+<h1>What this is</h1>
+
+<p>This package provides the following utilities over Jackson (2.1.x):</p>
+
+<ul>
+    <li>an {@link com.google.common.base.Equivalence} over {@link
+    com.fasterxml.jackson.databind.JsonNode} for numeric JSON values;</li>
+    <li>a generalized <a
+    href="http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-09">JSON
+    pointer</a> implementation over Jackson's {@link
+    com.fasterxml.jackson.core.TreeNode};</li>
+    <li>a JSON Pointer implementation for {@link
+    com.fasterxml.jackson.databind.JsonNode}.</li>
+</ul>
+
+<h1>JSON numeric equivalence</h1>
+
+<p>Several proposed IETF drafts require that two JSON numeric values be
+considered equal if their mathematical value is equal. Among these are JSON
+Schema and JSON Patch. But this is not the case with {@link
+com.fasterxml.jackson.databind.JsonNode}: <span style="font-family: monospace">1
+</span> and <span style="font-family: monospace">1.0</span> yield different
+types of nodes.</p>
+
+<p>This package provides an {@link com.google.common.base.Equivalence} to
+ensure that two numeric nodes are considered equivalent if their mathematical
+value is the same. See the javadoc for more information on how to use it.</p>
+
+<h1>JSON Pointer</h1>
+
+<p>JSON Pointer is an IETF draft which allows to unambiguously address a single
+value in a JSON document. This package contains an implementation which can not
+only address nodes in a {@link com.fasterxml.jackson.databind.JsonNode}, but any
+{@link com.fasterxml.jackson.core.TreeNode} implementation.</p>
+
+<p>All JSON Pointer related classes are in the following package: {@link
+com.github.fge.jackson.jsonpointer}.</p>
+
+</body>
