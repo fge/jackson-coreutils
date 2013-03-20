@@ -5,15 +5,33 @@ text.
 
 ## What this is
 
-This package uses Guava's
+This package provides two items:
+
+* it uses Guava's
 [Equivalence](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/base/Equivalence.html)
 over Jackson's
 [JsonNode](http://fasterxml.github.com/jackson-databind/javadoc/2.1.1/com/fasterxml/jackson/databind/JsonNode.html)
-to provide a means to compare JSON number values mathematically.
+to provide a means to compare JSON number values mathematically;
+* it has a generalized [JSON Pointer](http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-09)
+implementation over Jackson's `TreeNode`, along with a dedicated implementation over `JsonNode`.
 
-That is, JSON values `1` and `1.0` will be considered equivalent; but so will be all possible JSON
-representations of mathematical value 1 (including, for instance, `10e-1`).  And evaluation is
-recursive, which means that:
+## Why
+
+### Mathematical value equality
+
+When reading JSON into a `JsonNode`, Jackson will serialize `1` as an `IntNode` but `1.0` as a
+`DoubleNode` (or a `DecimalNode`).
+
+Understandably so, Jackson <b>will not</b> consider such nodes to be equal, since they do not share
+the same class. But, understandably so as well, some uses of JSON out there, including [JSON
+Schema](http://tools.ietf.org/html/draft-zyp-json-schema-04) and [JSON
+Patch](http://tools.ietf.org/html/draft-ietf-appsawg-json-patch-10), want to consider such nodes as
+equal.
+
+And this is where this package comes in. It allows you to consider that two numeric JSON values are
+mathematically equal -- recursively so. That is, JSON values `1` and `1.0` will be considered
+equivalent; but so will be all possible JSON representations of mathematical value 1 (including, for
+instance, `10e-1`). And evaluation is recursive, which means that:
 
 ```json
 [ 1, 2, 3 ]
@@ -25,17 +43,17 @@ will be considered equivalent to:
 [ 10e-1, 2.0, 0.3e1 ]
 ```
 
-## Why
+### JSON Pointer
 
-When reading JSON into a `JsonNode`, Jackson will serialize `1` as an `IntNode` but `1.0` as a
-`DoubleNode` (or a `DecimalNode`).
+JSON Pointer is an IETF draft which allows to unambiguously address any value into a JSON document
+(including the document itself, with the empty pointer). It is used in several IETF drafts:
 
-Understandably so, Jackson <b>will not</b> consider such nodes to be equal, since they do not share
-the same class. But, understandably so as well, some uses of JSON out there, including JSON Schema
-and JSON Patch, want to consider such nodes as equal.
+* [JSON Reference](http://tools.ietf.org/html/draft-pbryan-zyp-json-ref-03) (as the fragment part);
+* [JSON Patch](http://tools.ietf.org/html/draft-ietf-appsawg-json-patch-10).
 
-And this is where this package comes in. It allows you to consider that two numeric JSON values
-are mathematically equal -- recursively so.
+The implementation in this package applies to all `TreeNode`s. If all goes to plan, it may be an
+integral part of a future Jackson tree model (see
+[jackson-tree](https://github.com/fge/jackson-tree)).
 
 ## Versions
 
@@ -46,12 +64,14 @@ The current verson is **1.0**. Note that it depends on Jackson 2.1.x.
 ```xml
 <dependency>
     <groupId>com.github.fge</groupId>
-    <artifactId>jackson-numequals</artifactId>
+    <artifactId>jackson-coreutils</artifactId>
     <version>1.0</version>
 </dependency>
 ```
 
 ## Usage
+
+### Numeric equivalence
 
 It is **highly recommended**, though not mandatory, that for accuracy reasons, you ask Jackson
 that all floating point numbers be deserialized as `BigDecimal` by default:
@@ -60,7 +80,17 @@ that all floating point numbers be deserialized as `BigDecimal` by default:
 new ObjectMapper().enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
 ```
 
-When having got hold of your two `JsonNode` instances which you want to be equivalent if their JSON
+This package also provides facilities for reading `JsonNode`s using an `ObjectMapper` configured as
+above: `JacksonUtils` and `JsonLoader`. For instance:
+
+```java
+// Get a reader
+final ObjectReader reader = JacksonUtils.getReader();
+// Load a JsonNode with all decimals read as DecimalNode, from a file
+final JsonNode node = JsonLoader.fromFile("/path/to/file.json");
+```
+
+When having got hold of two `JsonNode` instances which you want to be equivalent if their JSON
 number values are the same, you can use:
 
 ```java
@@ -80,5 +110,27 @@ final Set<Equivalence.Wrapper<JsonNode>> set
 set.add(eq.wrap(node1));
 set.add(eq.wrap(node2));
 // etc
+```
+
+### JSON Pointer
+
+This section concentrates on the `JsonNode` specific JSON Pointer implementation: `JsonNode`.
+
+There are several ways you can build one:
+
+```java
+// Build from an input string -- potentially throws JsonPointerException on malformed inputs
+final JsonPointer ptr = new JsonPointer("/foo/bar");
+// Build from a series of raw tokens
+final JsonPointer ptr = JsonPointer.of("foo", "bar", 1); // Yields pointer "/foo/bar/1"
+```
+
+Note that `JsonPointer` (and, for that matter, `TreePointer` as well) is **immutable**:
+
+```java
+// DON'T DO THAT: value of "ptr" will not change
+ptr.append("foo");
+// Do that instead
+ptr = ptr.append("foo");
 ```
 
