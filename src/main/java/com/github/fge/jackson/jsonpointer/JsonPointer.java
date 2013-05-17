@@ -153,6 +153,24 @@ public final class JsonPointer
     }
 
     /**
+     * Return a new pointer with last token removed; if there
+     * is one or no tokens to remove, the {@link JsonPointer#empty()}
+     * pointer is returned
+     * 
+     * @return a new pointer or {@link JsonPointer#empty()}
+     */
+    public JsonPointer parent()
+    {
+        if (tokenResolvers.size() <= 1)
+            return empty();
+
+        final List<TokenResolver<JsonNode>> list
+            = Lists.newArrayList(tokenResolvers);
+        list.remove(list.size()-1);
+        return new JsonPointer(list);
+    }
+
+    /**
      * Build a list of token resolvers from a list of reference tokens
      *
      * <p>Here, the token resolvers are {@link JsonNodeResolver}s.</p>
