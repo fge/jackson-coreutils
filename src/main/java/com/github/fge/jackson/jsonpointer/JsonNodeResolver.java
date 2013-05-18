@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import net.jcip.annotations.Immutable;
 
 /**
- * Implementation of {@link TokenResolver} for {@link com.fasterxml.jackson.databind.JsonNode}
+ * Implementation of {@link TokenResolver} for {@link JsonNode}
  *
  * <p>The JSON Pointer specification specifies that for arrays, indices must
  * not have leading zeroes (save for {@code 0} itself). This class handles
@@ -54,7 +54,7 @@ public final class JsonNodeResolver
      * Return an array index corresponding to the given (raw) reference token
      *
      * <p>If no array index can be found, -1 is returned. As the result is used
-     * with {@link com.fasterxml.jackson.databind.JsonNode#get(int)}, we are guaranteed correct results, since
+     * with {@link JsonNode#get(int)}, we are guaranteed correct results, since
      * this will return {@code null} in this case.</p>
      *
      * @param raw the raw token, as a string

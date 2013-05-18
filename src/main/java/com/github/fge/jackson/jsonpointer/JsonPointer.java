@@ -17,6 +17,7 @@
 
 package com.github.fge.jackson.jsonpointer;
 
+import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
 import com.google.common.base.Preconditions;
@@ -29,7 +30,7 @@ import java.util.List;
 import static com.github.fge.jackson.jsonpointer.JsonPointerMessages.*;
 
 /**
- * A {@link TreePointer} for {@link com.fasterxml.jackson.databind.JsonNode}
+ * A {@link TreePointer} for {@link JsonNode}
  *
  * <p>This is the "original" JSON Pointer in that it addresses JSON documents.
  * </p>
@@ -98,8 +99,8 @@ public final class JsonPointer
     /**
      * Alternate constructor
      *
-     * <p>This calls {@link TreePointer#TreePointer(com.fasterxml.jackson.core.TreeNode, java.util.List)} with a
-     * {@link com.fasterxml.jackson.databind.node.MissingNode} as the missing tree node.</p>
+     * <p>This calls {@link TreePointer#TreePointer(TreeNode, List)} with a
+     * {@link MissingNode} as the missing tree node.</p>
      *
      * @param tokenResolvers the list of token resolvers
      */

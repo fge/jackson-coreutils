@@ -19,6 +19,7 @@ package com.github.fge.jackson;
 
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.MissingNode;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 
@@ -128,7 +129,7 @@ public enum NodeType
 
     /**
      * Given a {@link JsonNode} as an argument, return its type. The argument
-     * MUST NOT BE NULL, and MUST NOT be a {@link com.fasterxml.jackson.databind.node.MissingNode}
+     * MUST NOT BE NULL, and MUST NOT be a {@link MissingNode}
      *
      * @param node the node to determine the type of
      * @return the type for this node

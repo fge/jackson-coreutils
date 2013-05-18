@@ -18,6 +18,8 @@
 package com.github.fge.jackson.jsonpointer;
 
 import com.fasterxml.jackson.core.TreeNode;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.MissingNode;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -29,7 +31,7 @@ import java.util.List;
 import static com.github.fge.jackson.jsonpointer.JsonPointerMessages.*;
 
 /**
- * A pointer into a {@link com.fasterxml.jackson.core.TreeNode}
+ * A pointer into a {@link TreeNode}
  *
  * <p>Note that all pointers are <b>absolute</b>: they start from the root of
  * the tree. This is to mirror the behaviour of JSON Pointer proper.</p>
@@ -38,13 +40,13 @@ import static com.github.fge.jackson.jsonpointer.JsonPointerMessages.*;
  * it provides all the necessary methods for implementations to achieve this.
  * </p>
  *
- * <p>This class has two traversal methods: {@link #get(com.fasterxml.jackson.core.TreeNode)} and {@link
- * #path(com.fasterxml.jackson.core.TreeNode)}. The difference between both is that {@code path()} may
+ * <p>This class has two traversal methods: {@link #get(TreeNode)} and {@link
+ * #path(TreeNode)}. The difference between both is that {@code path()} may
  * return another node than {@code null} if the tree representation has such
- * a node. This is the case, for instance, for {@link com.fasterxml.jackson.databind.JsonNode}, which has a
- * {@link com.fasterxml.jackson.databind.node.MissingNode}.</p>
+ * a node. This is the case, for instance, for {@link JsonNode}, which has a
+ * {@link MissingNode}.</p>
  *
- * <p>At the core, this class is essentially a(n ordered!) {@link java.util.List} of
+ * <p>At the core, this class is essentially a(n ordered!) {@link List} of
  * {@link TokenResolver}s (which is iterable via the class itself).</p>
  *
  * <p>Note that this class' {@link #hashCode()}, {@link #equals(Object)} and
@@ -90,7 +92,7 @@ public abstract class TreePointer<T extends TreeNode>
     /**
      * Alternate constructor
      *
-     * <p>This is the same as calling {@link #TreePointer(com.fasterxml.jackson.core.TreeNode, java.util.List)} with
+     * <p>This is the same as calling {@link #TreePointer(TreeNode, List)} with
      * {@code null} as the missing node.</p>
      *
      * @param tokenResolvers the list of token resolvers
@@ -157,12 +159,12 @@ public abstract class TreePointer<T extends TreeNode>
     /**
      * Traverse a node and return the result
      *
-     * <p>This is like {@link #get(com.fasterxml.jackson.core.TreeNode)}, but it will return the missing
+     * <p>This is like {@link #get(TreeNode)}, but it will return the missing
      * node if traversal fails.</p>
      *
      * @param node the node to traverse
      * @return the result, or the missing node
-     * @see #TreePointer(com.fasterxml.jackson.core.TreeNode, java.util.List)
+     * @see #TreePointer(TreeNode, List)
      */
     public final T path(final T node)
     {

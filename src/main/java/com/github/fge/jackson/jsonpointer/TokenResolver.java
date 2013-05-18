@@ -18,16 +18,17 @@
 package com.github.fge.jackson.jsonpointer;
 
 import com.fasterxml.jackson.core.TreeNode;
+import com.fasterxml.jackson.databind.JsonNode;
 import net.jcip.annotations.ThreadSafe;
 
 /**
  * Reference token traversal class
  *
  * <p>This class is meant to be extended and implemented for all types of trees
- * inheriting {@link com.fasterxml.jackson.core.TreeNode}.</p>
+ * inheriting {@link TreeNode}.</p>
  *
  * <p>This package contains one implementation of this class for {@link
- * com.fasterxml.jackson.databind.JsonNode}.</p>
+ * JsonNode}.</p>
  *
  * <p>Note that its {@link #equals(Object)}, {@link #hashCode()} and {@link
  * #toString()} are final.</p>
