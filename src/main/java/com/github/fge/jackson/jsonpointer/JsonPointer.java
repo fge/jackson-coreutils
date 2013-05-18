@@ -162,13 +162,8 @@ public final class JsonPointer
      */
     public JsonPointer parent()
     {
-        if (tokenResolvers.size() <= 1)
-            return empty();
-
-        final List<TokenResolver<JsonNode>> list
-            = Lists.newArrayList(tokenResolvers);
-        list.remove(list.size()-1);
-        return new JsonPointer(list);
+        final int size = tokenResolvers.size();
+        return size <= 1 ? EMPTY : new JsonPointer(tokenResolvers.subList(0, size - 1));
     }
 
     /**
