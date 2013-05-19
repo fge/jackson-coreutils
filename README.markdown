@@ -12,7 +12,7 @@ This package provides two items:
 over Jackson's
 [JsonNode](http://fasterxml.github.com/jackson-databind/javadoc/2.1.1/com/fasterxml/jackson/databind/JsonNode.html)
 to provide a means to compare JSON number values mathematically;
-* it has a generalized [JSON Pointer](http://tools.ietf.org/html/draft-ietf-appsawg-json-pointer-09)
+* it has a generalized [JSON Pointer](http://tools.ietf.org/html/rfc6901)
 implementation over Jackson's `TreeNode`, along with a dedicated implementation over `JsonNode`.
 
 ## Why
@@ -25,7 +25,7 @@ When reading JSON into a `JsonNode`, Jackson will serialize `1` as an `IntNode` 
 Understandably so, Jackson <b>will not</b> consider such nodes to be equal, since they do not share
 the same class. But, understandably so as well, some uses of JSON out there, including [JSON
 Schema](http://tools.ietf.org/html/draft-zyp-json-schema-04) and [JSON
-Patch](http://tools.ietf.org/html/draft-ietf-appsawg-json-patch-10), want to consider such nodes as
+Patch](http://tools.ietf.org/html/rfc6902), want to consider such nodes as
 equal.
 
 And this is where this package comes in. It allows you to consider that two numeric JSON values are
@@ -49,7 +49,7 @@ JSON Pointer is an IETF draft which allows to unambiguously address any value in
 (including the document itself, with the empty pointer). It is used in several IETF drafts:
 
 * [JSON Reference](http://tools.ietf.org/html/draft-pbryan-zyp-json-ref-03) (as the fragment part);
-* [JSON Patch](http://tools.ietf.org/html/draft-ietf-appsawg-json-patch-10).
+* [JSON Patch](http://tools.ietf.org/html/rfc6902).
 
 The implementation in this package applies to all `TreeNode`s. If all goes to plan, it may be an
 integral part of a future Jackson tree model (see
