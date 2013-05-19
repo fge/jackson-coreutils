@@ -154,16 +154,17 @@ public final class JsonPointer
     }
 
     /**
-     * Return a new pointer with last token removed; if there
-     * is one or no tokens to remove, the {@link JsonPointer#empty()}
-     * pointer is returned
-     * 
-     * @return a new pointer or {@link JsonPointer#empty()}
+     * Return the immediate parent of this JSON Pointer
+     *
+     * <p>The parent of the empty pointer is itself.</p>
+     *
+     * @return a new JSON Pointer representing the parent of the current one
      */
     public JsonPointer parent()
     {
         final int size = tokenResolvers.size();
-        return size <= 1 ? EMPTY : new JsonPointer(tokenResolvers.subList(0, size - 1));
+        return size <= 1 ? EMPTY
+            : new JsonPointer(tokenResolvers.subList(0, size - 1));
     }
 
     /**

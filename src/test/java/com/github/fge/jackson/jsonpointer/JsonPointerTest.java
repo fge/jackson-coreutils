@@ -175,4 +175,30 @@ public final class JsonPointerTest
         ptr2 = new JsonPointer("/");
         assertEquals(ptr1, ptr2);
     }
+
+    @DataProvider
+    public Iterator<Object[]> parentTestData()
+    {
+        final List<Object[]> list = Lists.newArrayList();
+
+        // Empty
+        list.add(new Object[] { JsonPointer.empty(), JsonPointer.empty() });
+        // Single token pointer
+        list.add(new Object[] { JsonPointer.of(1), JsonPointer.empty() });
+        list.add(new Object[] { JsonPointer.of("a"), JsonPointer.empty() });
+        // Multiple token pointer
+        list.add(new Object[] { JsonPointer.of("a", "b"),
+            JsonPointer.of("a") });
+        list.add(new Object[] { JsonPointer.of("a", "b", "c" ),
+            JsonPointer.of("a", "b") });
+
+        return list.iterator();
+    }
+
+    @Test(dataProvider = "parentTestData")
+    public void parentComputationWorks(final JsonPointer child,
+        final JsonPointer parent)
+    {
+        assertEquals(child.parent(), parent);
+    }
 }
