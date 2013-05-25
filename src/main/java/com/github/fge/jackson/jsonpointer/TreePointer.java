@@ -27,8 +27,7 @@ import net.jcip.annotations.ThreadSafe;
 
 import java.util.Iterator;
 import java.util.List;
-
-import static com.github.fge.jackson.jsonpointer.JsonPointerMessages.*;
+import java.util.ResourceBundle;
 
 /**
  * A pointer into a {@link TreeNode}
@@ -58,6 +57,8 @@ import static com.github.fge.jackson.jsonpointer.JsonPointerMessages.*;
 public abstract class TreePointer<T extends TreeNode>
     implements Iterable<TokenResolver<T>>
 {
+    protected static final ResourceBundle BUNDLE
+        = ResourceBundle.getBundle("jsonpointer");
     /**
      * The reference token separator
      */
@@ -113,7 +114,8 @@ public abstract class TreePointer<T extends TreeNode>
     protected static List<ReferenceToken> tokensFromInput(final String input)
         throws JsonPointerException
     {
-        String s = Preconditions.checkNotNull(input, NULL_INPUT);
+        String s = Preconditions.checkNotNull(input,
+            BUNDLE.getString("nullInput"));
         final List<ReferenceToken> ret = Lists.newArrayList();
         String cooked;
         int index;
@@ -122,7 +124,7 @@ public abstract class TreePointer<T extends TreeNode>
         while (!s.isEmpty()) {
             c = s.charAt(0);
             if (c != SLASH)
-                throw new JsonPointerException(NOT_SLASH);
+                throw new JsonPointerException(BUNDLE.getString("notSlash"));
             s = s.substring(1);
             index = s.indexOf(SLASH);
             cooked = index == -1 ? s : s.substring(0, index);

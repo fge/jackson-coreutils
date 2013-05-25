@@ -23,14 +23,17 @@ import com.google.common.collect.Lists;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
-import static com.github.fge.jackson.jsonpointer.JsonPointerMessages.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
 public final class TreePointerTest
 {
+    private static final ResourceBundle BUNDLE
+        = ResourceBundle.getBundle("jsonpointer");
+
     @Test
     public void attemptToBuildTokensFromNullRaisesAnError()
         throws JsonPointerException
@@ -39,7 +42,7 @@ public final class TreePointerTest
             TreePointer.tokensFromInput(null);
             fail("No exception thrown!!");
         } catch (NullPointerException e) {
-            assertEquals(e.getMessage(), NULL_INPUT);
+            assertEquals(e.getMessage(), BUNDLE.getString("nullInput"));
         }
     }
 
@@ -50,7 +53,7 @@ public final class TreePointerTest
             TreePointer.tokensFromInput("a/b");
             fail("No exception thrown!!");
         } catch (JsonPointerException e) {
-            assertEquals(e.getMessage(), NOT_SLASH);
+            assertEquals(e.getMessage(), BUNDLE.getString("notSlash"));
         }
     }
 
