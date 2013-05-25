@@ -18,7 +18,8 @@
 package com.github.fge.jackson.jsonpointer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import net.jcip.annotations.Immutable;
+
+import javax.annotation.concurrent.Immutable;
 
 /**
  * Implementation of {@link TokenResolver} for {@link JsonNode}

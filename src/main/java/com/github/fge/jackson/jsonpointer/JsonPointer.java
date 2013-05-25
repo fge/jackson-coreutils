@@ -23,8 +23,8 @@ import com.fasterxml.jackson.databind.node.MissingNode;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import net.jcip.annotations.Immutable;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.List;
 
 /**

@@ -19,7 +19,8 @@ package com.github.fge.jackson.jsonpointer;
 
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
-import net.jcip.annotations.ThreadSafe;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
  * Reference token traversal class

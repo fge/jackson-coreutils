@@ -19,8 +19,8 @@ package com.github.fge.jackson.jsonpointer;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import net.jcip.annotations.Immutable;
 
+import javax.annotation.concurrent.Immutable;
 import java.util.List;
 import java.util.ResourceBundle;
 
