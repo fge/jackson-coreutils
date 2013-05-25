@@ -22,12 +22,15 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
-import static com.github.fge.jackson.jsonpointer.JsonPointerMessages.*;
 import static org.testng.Assert.*;
 
 public final class ReferenceTokenTest
 {
+    private static final ResourceBundle BUNDLE
+        = ResourceBundle.getBundle("jsonpointer");
+
     @Test
     public void nullCookedRaisesError()
         throws JsonPointerException
@@ -36,7 +39,7 @@ public final class ReferenceTokenTest
             ReferenceToken.fromCooked(null);
             fail("No exception thrown!!");
         } catch (NullPointerException e) {
-            assertEquals(e.getMessage(), NULL_INPUT);
+            assertEquals(e.getMessage(), BUNDLE.getString("nullInput"));
         }
     }
     @Test
@@ -46,7 +49,7 @@ public final class ReferenceTokenTest
             ReferenceToken.fromRaw(null);
             fail("No exception thrown!!");
         } catch (NullPointerException e) {
-            assertEquals(e.getMessage(), NULL_INPUT);
+            assertEquals(e.getMessage(), BUNDLE.getString("nullInput"));
         }
     }
 
@@ -57,7 +60,7 @@ public final class ReferenceTokenTest
             ReferenceToken.fromCooked("whatever~");
             fail("No exception thrown!!");
         } catch (JsonPointerException e) {
-            assertEquals(e.getMessage(), EMPTY_ESCAPE);
+            assertEquals(e.getMessage(), BUNDLE.getString("emptyEscape"));
         }
     }
 
@@ -68,7 +71,7 @@ public final class ReferenceTokenTest
             ReferenceToken.fromCooked("~a");
             fail("No exception thrown!!");
         } catch (JsonPointerException e) {
-            assertEquals(e.getMessage(), ILLEGAL_ESCAPE);
+            assertEquals(e.getMessage(), BUNDLE.getString("illegalEscape"));
         }
     }
 

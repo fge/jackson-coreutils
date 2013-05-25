@@ -22,8 +22,8 @@ import com.google.common.collect.ImmutableList;
 import net.jcip.annotations.Immutable;
 
 import java.util.List;
+import java.util.ResourceBundle;
 
-import static com.github.fge.jackson.jsonpointer.JsonPointerMessages.*;
 
 /**
  * One JSON Pointer reference token
@@ -42,6 +42,8 @@ import static com.github.fge.jackson.jsonpointer.JsonPointerMessages.*;
 @Immutable
 public final class ReferenceToken
 {
+    private static final ResourceBundle BUNDLE
+        = ResourceBundle.getBundle("jsonpointer");
     /**
      * The escape character in a cooked token
      */
@@ -97,7 +99,7 @@ public final class ReferenceToken
     public static ReferenceToken fromCooked(final String cooked)
         throws JsonPointerException
     {
-        Preconditions.checkNotNull(cooked, NULL_INPUT);
+        Preconditions.checkNotNull(cooked, BUNDLE.getString("nullInput"));
         return new ReferenceToken(cooked, asRaw(cooked));
     }
 
@@ -110,7 +112,7 @@ public final class ReferenceToken
      */
     public static ReferenceToken fromRaw(final String raw)
     {
-        Preconditions.checkNotNull(raw, NULL_INPUT);
+        Preconditions.checkNotNull(raw, BUNDLE.getString("nullInput"));
         return new ReferenceToken(asCooked(raw), raw);
     }
 
@@ -193,7 +195,7 @@ public final class ReferenceToken
         }
 
         if (inEscape)
-            throw new JsonPointerException(EMPTY_ESCAPE);
+            throw new JsonPointerException(BUNDLE.getString("emptyEscape"));
 
         return raw.toString();
     }
@@ -210,7 +212,7 @@ public final class ReferenceToken
     {
         final int index = ENCODED.indexOf(c);
         if (index == -1)
-            throw new JsonPointerException(ILLEGAL_ESCAPE);
+            throw new JsonPointerException(BUNDLE.getString("illegalEscape"));
 
         sb.append(DECODED.get(index));
     }
