@@ -5,7 +5,7 @@ text.
 
 ## What this is
 
-This package provides two items:
+This package is meant to be used with Jackson 2.1.x. It provides two items:
 
 * it uses Guava's
 [Equivalence](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/base/Equivalence.html)
@@ -57,7 +57,8 @@ integral part of a future Jackson tree model (see
 
 ## Versions
 
-The current verson is **1.0**. Note that it depends on Jackson 2.1.x.
+The current verson is **1.1**. Its Javadoc is [available
+online](http://fge.github.io/jackson-coreutils/index.html).
 
 ## Maven artifact
 

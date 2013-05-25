@@ -19,7 +19,7 @@
     <groupId>com.github.fge</groupId>
     <artifactId>jackson-coreutils</artifactId>
     <name>jackson-coreutils</name>
-    <version>1.1</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>bundle</packaging>
     <description>JSON Pointer (RFC 6901) and numeric equality for Jackson (2.1.x)</description>
     <url>https://github.com/fge/jackson-coreutils</url>
