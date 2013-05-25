@@ -15,6 +15,21 @@ to provide a means to compare JSON number values mathematically;
 * it has a generalized [JSON Pointer](http://tools.ietf.org/html/rfc6901)
 implementation over Jackson's `TreeNode`, along with a dedicated implementation over `JsonNode`.
 
+## Versions
+
+The current verson is **1.1**. Its Javadoc is [available
+online](http://fge.github.io/jackson-coreutils/index.html).
+
+## Maven artifact
+
+```xml
+<dependency>
+    <groupId>com.github.fge</groupId>
+    <artifactId>jackson-coreutils</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+
 ## Why
 
 ### Mathematical value equality
@@ -54,21 +69,6 @@ JSON Pointer is an IETF draft which allows to unambiguously address any value in
 The implementation in this package applies to all `TreeNode`s. If all goes to plan, it may be an
 integral part of a future Jackson tree model (see
 [jackson-tree](https://github.com/fge/jackson-tree)).
-
-## Versions
-
-The current verson is **1.1**. Its Javadoc is [available
-online](http://fge.github.io/jackson-coreutils/index.html).
-
-## Maven artifact
-
-```xml
-<dependency>
-    <groupId>com.github.fge</groupId>
-    <artifactId>jackson-coreutils</artifactId>
-    <version>1.0</version>
-</dependency>
-```
 
 ## Usage
 
