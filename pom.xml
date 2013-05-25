@@ -45,6 +45,7 @@
                         <link>http://fasterxml.github.com/jackson-databind/javadoc/2.1.1/</link>
                         <link>http://docs.oracle.com/javase/6/docs/api</link>
                         <link>http://docs.guava-libraries.googlecode.com/git/javadoc</link>
+                        <link>http://jsr-305.googlecode.com/svn/trunk/javadoc</link>
                     </links>
                     <docfilessubdirs>true</docfilessubdirs>
                 </configuration>
