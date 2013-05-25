@@ -33,12 +33,15 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
-import static com.github.fge.jackson.jsonpointer.JsonPointerMessages.*;
 import static org.testng.Assert.*;
 
 public final class JsonPointerTest
 {
+    private static final ResourceBundle BUNDLE
+        = ResourceBundle.getBundle("jsonpointer");
+
     private final JsonNode testData;
     private final JsonNode document;
 
@@ -57,7 +60,7 @@ public final class JsonPointerTest
             JsonPointer.empty().append(foo);
             fail("No exception thrown!!");
         } catch (NullPointerException e) {
-            assertEquals(e.getMessage(), NULL_INPUT);
+            assertEquals(e.getMessage(), BUNDLE.getString("nullInput"));
         }
     }
 

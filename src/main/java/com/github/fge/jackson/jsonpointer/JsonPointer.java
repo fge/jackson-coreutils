@@ -27,8 +27,6 @@ import net.jcip.annotations.Immutable;
 
 import java.util.List;
 
-import static com.github.fge.jackson.jsonpointer.JsonPointerMessages.*;
-
 /**
  * A {@link TreePointer} for {@link JsonNode}
  *
@@ -146,7 +144,7 @@ public final class JsonPointer
      */
     public JsonPointer append(final JsonPointer other)
     {
-        Preconditions.checkNotNull(other, NULL_INPUT);
+        Preconditions.checkNotNull(other, BUNDLE.getString("nullInput"));
         final List<TokenResolver<JsonNode>> list
             = Lists.newArrayList(tokenResolvers);
         list.addAll(other.tokenResolvers);
