@@ -59,14 +59,13 @@ public final class JsonLoader
     public static JsonNode fromResource(final String resource)
         throws IOException
     {
-        final InputStream in
-            = JsonLoader.class.getResourceAsStream(resource);
+        final URL url = JsonLoader.class.getResource(resource);
 
-        if (in == null)
+        if (url == null)
             throw new IOException("resource " + resource + " not found");
 
         final JsonNode ret;
-
+        final InputStream in = url.openStream();
         try {
             ret = READER.readTree(in);
         } finally {
