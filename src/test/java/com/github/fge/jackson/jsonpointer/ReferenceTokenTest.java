@@ -17,19 +17,20 @@
 
 package com.github.fge.jackson.jsonpointer;
 
+import com.github.fge.msgsimple.bundle.MessageBundle;
+import com.github.fge.msgsimple.serviceloader.MessageBundleFactory;
 import com.google.common.collect.ImmutableList;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.Iterator;
-import java.util.ResourceBundle;
 
 import static org.testng.Assert.*;
 
 public final class ReferenceTokenTest
 {
-    private static final ResourceBundle BUNDLE
-        = ResourceBundle.getBundle("jsonpointer");
+    private static final MessageBundle BUNDLE
+        = MessageBundleFactory.getBundle(JsonPointerMessages.class);
 
     @Test
     public void nullCookedRaisesError()
@@ -39,7 +40,7 @@ public final class ReferenceTokenTest
             ReferenceToken.fromCooked(null);
             fail("No exception thrown!!");
         } catch (NullPointerException e) {
-            assertEquals(e.getMessage(), BUNDLE.getString("nullInput"));
+            assertEquals(e.getMessage(), BUNDLE.getMessage("nullInput"));
         }
     }
     @Test
@@ -49,7 +50,7 @@ public final class ReferenceTokenTest
             ReferenceToken.fromRaw(null);
             fail("No exception thrown!!");
         } catch (NullPointerException e) {
-            assertEquals(e.getMessage(), BUNDLE.getString("nullInput"));
+            assertEquals(e.getMessage(), BUNDLE.getMessage("nullInput"));
         }
     }
 
@@ -60,7 +61,7 @@ public final class ReferenceTokenTest
             ReferenceToken.fromCooked("whatever~");
             fail("No exception thrown!!");
         } catch (JsonPointerException e) {
-            assertEquals(e.getMessage(), BUNDLE.getString("emptyEscape"));
+            assertEquals(e.getMessage(), BUNDLE.getMessage("emptyEscape"));
         }
     }
 
@@ -71,7 +72,7 @@ public final class ReferenceTokenTest
             ReferenceToken.fromCooked("~a");
             fail("No exception thrown!!");
         } catch (JsonPointerException e) {
-            assertEquals(e.getMessage(), BUNDLE.getString("illegalEscape"));
+            assertEquals(e.getMessage(), BUNDLE.getMessage("illegalEscape"));
         }
     }
 

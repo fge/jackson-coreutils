@@ -20,7 +20,6 @@ package com.github.fge.jackson.jsonpointer;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
@@ -144,7 +143,7 @@ public final class JsonPointer
      */
     public JsonPointer append(final JsonPointer other)
     {
-        Preconditions.checkNotNull(other, BUNDLE.getString("nullInput"));
+        BUNDLE.checkNotNull(other, "nullInput");
         final List<TokenResolver<JsonNode>> list
             = Lists.newArrayList(tokenResolvers);
         list.addAll(other.tokenResolvers);

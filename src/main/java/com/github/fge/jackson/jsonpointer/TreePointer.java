@@ -20,14 +20,14 @@ package com.github.fge.jackson.jsonpointer;
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
-import com.google.common.base.Preconditions;
+import com.github.fge.msgsimple.bundle.MessageBundle;
+import com.github.fge.msgsimple.serviceloader.MessageBundleFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
 
 /**
  * A pointer into a {@link TreeNode}
@@ -57,8 +57,8 @@ import java.util.ResourceBundle;
 public abstract class TreePointer<T extends TreeNode>
     implements Iterable<TokenResolver<T>>
 {
-    protected static final ResourceBundle BUNDLE
-        = ResourceBundle.getBundle("jsonpointer");
+    protected static final MessageBundle BUNDLE
+        = MessageBundleFactory.getBundle(JsonPointerMessages.class);
     /**
      * The reference token separator
      */
@@ -114,8 +114,7 @@ public abstract class TreePointer<T extends TreeNode>
     protected static List<ReferenceToken> tokensFromInput(final String input)
         throws JsonPointerException
     {
-        String s = Preconditions.checkNotNull(input,
-            BUNDLE.getString("nullInput"));
+        String s = BUNDLE.checkNotNull(input, "nullInput");
         final List<ReferenceToken> ret = Lists.newArrayList();
         String cooked;
         int index;
@@ -124,7 +123,7 @@ public abstract class TreePointer<T extends TreeNode>
         while (!s.isEmpty()) {
             c = s.charAt(0);
             if (c != SLASH)
-                throw new JsonPointerException(BUNDLE.getString("notSlash"));
+                throw new JsonPointerException(BUNDLE.getMessage("notSlash"));
             s = s.substring(1);
             index = s.indexOf(SLASH);
             cooked = index == -1 ? s : s.substring(0, index);

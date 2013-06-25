@@ -68,8 +68,9 @@ project.ext {
  */
 
 project.ext {
-    // Uncomment and fill the array below as appropriate.
-    // serviceClasses = [];
+    serviceClasses = [
+        "com.github.fge.msgsimple.serviceloader.MessageBundleProvider"
+    ];
 };
 
 project.ext {

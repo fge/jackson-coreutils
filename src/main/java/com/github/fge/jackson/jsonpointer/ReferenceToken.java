@@ -17,12 +17,12 @@
 
 package com.github.fge.jackson.jsonpointer;
 
-import com.google.common.base.Preconditions;
+import com.github.fge.msgsimple.bundle.MessageBundle;
+import com.github.fge.msgsimple.serviceloader.MessageBundleFactory;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.concurrent.Immutable;
 import java.util.List;
-import java.util.ResourceBundle;
 
 
 /**
@@ -42,8 +42,8 @@ import java.util.ResourceBundle;
 @Immutable
 public final class ReferenceToken
 {
-    private static final ResourceBundle BUNDLE
-        = ResourceBundle.getBundle("jsonpointer");
+    private static final MessageBundle BUNDLE
+        = MessageBundleFactory.getBundle(JsonPointerMessages.class);
     /**
      * The escape character in a cooked token
      */
@@ -99,7 +99,7 @@ public final class ReferenceToken
     public static ReferenceToken fromCooked(final String cooked)
         throws JsonPointerException
     {
-        Preconditions.checkNotNull(cooked, BUNDLE.getString("nullInput"));
+        BUNDLE.checkNotNull(cooked, "nullInput");
         return new ReferenceToken(cooked, asRaw(cooked));
     }
 
@@ -112,7 +112,7 @@ public final class ReferenceToken
      */
     public static ReferenceToken fromRaw(final String raw)
     {
-        Preconditions.checkNotNull(raw, BUNDLE.getString("nullInput"));
+        BUNDLE.checkNotNull(raw, "nullInput");
         return new ReferenceToken(asCooked(raw), raw);
     }
 
@@ -195,7 +195,7 @@ public final class ReferenceToken
         }
 
         if (inEscape)
-            throw new JsonPointerException(BUNDLE.getString("emptyEscape"));
+            throw new JsonPointerException(BUNDLE.getMessage("emptyEscape"));
 
         return raw.toString();
     }
@@ -212,7 +212,7 @@ public final class ReferenceToken
     {
         final int index = ENCODED.indexOf(c);
         if (index == -1)
-            throw new JsonPointerException(BUNDLE.getString("illegalEscape"));
+            throw new JsonPointerException(BUNDLE.getMessage("illegalEscape"));
 
         sb.append(DECODED.get(index));
     }
