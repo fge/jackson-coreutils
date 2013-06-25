@@ -42,6 +42,17 @@ repositories {
 }
 
 /*
+ * Project-specific settings. Unfortunately we cannot put the name in there!
+ */
+version = "1.2-SNAPSHOT";
+sourceCompatibility = "1.6";
+targetCompatibility = "1.6"; // defaults to sourceCompatibility
+
+project.ext {
+    description = "JSON Pointer (RFC 6901) and numeric equality for Jackson (2.2.x)";
+};
+
+/*
  * List of dependencies
  *
  * Transitive is sort of like Maven"s provided, except it won"t find its way
