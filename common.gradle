@@ -164,5 +164,5 @@ task prepareIdea(dependsOn: testClasses) << {
         from(sourceSets.test.output.classesDir);
         from(sourceSets.test.output.resourcesDir);
         into(ideaTest);
-    }
+    };
 }
