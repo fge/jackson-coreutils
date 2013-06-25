@@ -118,7 +118,7 @@ artifacts {
     archives jar;
     archives sourcesJar;
     archives javadocJar;
-    archives fatJar;
+// bad idea:    archives fatJar;
 }
 
 signing {
