@@ -6,4 +6,5 @@
 # The only thing missing is making this script non interactive...
 #
 
-mvn clean javadoc:jar source:jar package gpg:sign repository:bundle-create deploy
+./gradlew --recompile-scripts uploadArchives
+
