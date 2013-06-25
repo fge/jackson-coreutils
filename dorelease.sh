@@ -6,5 +6,5 @@
 # The only thing missing is making this script non interactive...
 #
 
-./gradlew --recompile-scripts uploadArchives
+./gradlew --recompile-scripts clean test uploadArchives
 
