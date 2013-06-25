@@ -62,6 +62,10 @@ dependencies {
     testCompile(group: "org.mockito", name: "mockito-core", version: "1.9.5");
 }
 
+javadoc.options.links("http://docs.oracle.com/javase/6/docs/api");
+javadoc.options.links("http://jsr-305.googlecode.com/svn/trunk/javadoc");
+javadoc.options.links("http://fge.github.com/btf");
+
 /*
  * Necessary! Otherwise TestNG will not be used...
  *
@@ -90,13 +94,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 fatJar {
     classifier = "full";
-}
-
-jar {
-    manifest {
-        version = "${version}";
-        symbolicName = "${name}";
-    }
 }
 
 processResources {
