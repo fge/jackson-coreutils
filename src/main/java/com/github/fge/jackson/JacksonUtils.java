@@ -41,8 +41,7 @@ import java.util.Map;
  */
 public final class JacksonUtils
 {
-    private static final JsonNodeFactory FACTORY
-        = JsonNodeFactory.withExactBigDecimals(false);
+    private static final JsonNodeFactory FACTORY = JsonNodeFactory.instance;
 
     private static final ObjectReader READER;
     private static final ObjectWriter WRITER;
