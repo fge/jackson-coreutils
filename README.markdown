@@ -5,7 +5,7 @@ text.
 
 ## What this is
 
-This package is meant to be used with Jackson 2.1.x. It provides two items:
+This package is meant to be used with Jackson 2.2.x. It provides two items:
 
 * it uses Guava's
 [Equivalence](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/base/Equivalence.html)
