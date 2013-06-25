@@ -18,12 +18,13 @@
 package com.github.fge.jackson.jsonpointer;
 
 import com.fasterxml.jackson.core.TreeNode;
+import com.github.fge.msgsimple.bundle.MessageBundle;
+import com.github.fge.msgsimple.serviceloader.MessageBundleFactory;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.testng.annotations.Test;
 
 import java.util.List;
-import java.util.ResourceBundle;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -31,8 +32,8 @@ import static org.testng.Assert.*;
 
 public final class TreePointerTest
 {
-    private static final ResourceBundle BUNDLE
-        = ResourceBundle.getBundle("jsonpointer");
+    private static final MessageBundle BUNDLE
+        = MessageBundleFactory.getBundle(JsonPointerMessages.class);
 
     @Test
     public void attemptToBuildTokensFromNullRaisesAnError()
@@ -42,7 +43,7 @@ public final class TreePointerTest
             TreePointer.tokensFromInput(null);
             fail("No exception thrown!!");
         } catch (NullPointerException e) {
-            assertEquals(e.getMessage(), BUNDLE.getString("nullInput"));
+            assertEquals(e.getMessage(), BUNDLE.getMessage("nullInput"));
         }
     }
 
@@ -53,7 +54,7 @@ public final class TreePointerTest
             TreePointer.tokensFromInput("a/b");
             fail("No exception thrown!!");
         } catch (JsonPointerException e) {
-            assertEquals(e.getMessage(), BUNDLE.getString("notSlash"));
+            assertEquals(e.getMessage(), BUNDLE.getMessage("notSlash"));
         }
     }
 
