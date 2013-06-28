@@ -22,6 +22,7 @@ import com.github.fge.msgsimple.serviceloader.MessageBundleFactory;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.concurrent.Immutable;
+import java.nio.CharBuffer;
 import java.util.List;
 
 
@@ -175,13 +176,12 @@ public final class ReferenceToken
     {
         final StringBuilder raw = new StringBuilder(cooked.length());
 
-        String s = cooked;
+        final CharBuffer buffer = CharBuffer.wrap(cooked);
         boolean inEscape = false;
         char c;
 
-        while (!s.isEmpty()) {
-            c = s.charAt(0);
-            s = s.substring(1);
+        while (buffer.hasRemaining()) {
+            c = buffer.get();
             if (inEscape) {
                 appendEscaped(raw, c);
                 inEscape = false;
@@ -227,13 +227,12 @@ public final class ReferenceToken
     {
         final StringBuilder cooked = new StringBuilder(raw.length());
 
-        String s = raw;
+        final CharBuffer buffer = CharBuffer.wrap(raw);
         char c;
         int index;
 
-        while (!s.isEmpty()) {
-            c = s.charAt(0);
-            s = s.substring(1);
+        while (buffer.hasRemaining()) {
+            c = buffer.get();
             index = DECODED.indexOf(c);
             if (index != -1)
                 cooked.append('~').append(ENCODED.get(index));
