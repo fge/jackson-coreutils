@@ -17,16 +17,25 @@ implementation over Jackson's `TreeNode`, along with a dedicated implementation 
 
 ## Versions
 
-The current verson is **1.2**. Its Javadoc is [available
+The current verson is **1.3**. Its Javadoc is [available
 online](http://fge.github.io/jackson-coreutils/index.html).
 
-## Maven artifact
+## Using in Gradle/Maven
+
+With Gradle:
+
+```
+dependencies {
+    compile(group: "com.github.fge", name: "jackson-coreutils", version: "yourVersionHere");
+}
+
+With Maven:
 
 ```xml
 <dependency>
     <groupId>com.github.fge</groupId>
     <artifactId>jackson-coreutils</artifactId>
-    <version>1.0</version>
+    <version>yourVersionHere</version>
 </dependency>
 ```
 
@@ -85,10 +94,12 @@ This package also provides facilities for reading `JsonNode`s using an `ObjectMa
 above: `JacksonUtils` and `JsonLoader`. For instance:
 
 ```java
-// Get a reader
-final ObjectReader reader = JacksonUtils.getReader();
 // Load a JsonNode with all decimals read as DecimalNode, from a file
 final JsonNode node = JsonLoader.fromFile("/path/to/file.json");
+// Get a preconfigured reader
+final ObjectReader reader = JacksonUtils.getReader();
+// Get a preconfigured ObjectMapper
+final ObjectMapper mapper = JacksonUtils.newMapper();
 ```
 
 When having got hold of two `JsonNode` instances which you want to be equivalent if their JSON
@@ -124,6 +135,8 @@ There are several ways you can build one:
 final JsonPointer ptr = new JsonPointer("/foo/bar");
 // Build from a series of raw tokens
 final JsonPointer ptr = JsonPointer.of("foo", "bar", 1); // Yields pointer "/foo/bar/1"
+// Get another pointer's parent:
+final JsonPointer parent = ptr.parent();
 ```
 
 Note that `JsonPointer` (and, for that matter, `TreePointer` as well) is **immutable**:
