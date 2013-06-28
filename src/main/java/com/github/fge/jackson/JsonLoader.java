@@ -19,6 +19,7 @@ package com.github.fge.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.google.common.io.Closer;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,8 +30,7 @@ import java.io.StringReader;
 import java.net.URL;
 
 /**
- * Utility class to load JSON documents (schemas or instance) from various
- * sources as {@link JsonNode}s.
+ * Utility class to load JSON values from various sources as {@link JsonNode}s.
  *
  * <p>This class uses {@link JacksonUtils#getReader()} as an {@link
  * ObjectReader} to parse JSON inputs.</p>
@@ -47,9 +47,11 @@ public final class JsonLoader
     }
 
     /**
-     * Read a {@link JsonNode} from a resource path. Explicitly throws an
-     * {@link IOException} if the resource is null, instead of letting a
-     * {@link NullPointerException} slip through...
+     * Read a {@link JsonNode} from a resource path.
+     *
+     * <p>This method explicitly throws an {@link IOException} if the resource
+     * does not exist, instead of letting a {@link NullPointerException} slip
+     * through.</p>
      *
      * @param resource The path to the resource
      * @return the JSON document at the resource
@@ -64,12 +66,15 @@ public final class JsonLoader
         if (url == null)
             throw new IOException("resource " + resource + " not found");
 
+        final Closer closer = Closer.create();
         final JsonNode ret;
-        final InputStream in = url.openStream();
+        final InputStream in;
+
         try {
+            in = closer.register(url.openStream());
             ret = READER.readTree(in);
         } finally {
-            in.close();
+            closer.close();
         }
 
         return ret;
@@ -98,14 +103,15 @@ public final class JsonLoader
     public static JsonNode fromPath(final String path)
         throws IOException
     {
+        final Closer closer = Closer.create();
         final JsonNode ret;
-
-        final FileInputStream in = new FileInputStream(path);
+        final FileInputStream in;
 
         try {
+            in = closer.register(new FileInputStream(path));
             ret = READER.readTree(in);
         } finally {
-            in.close();
+            closer.close();
         }
 
         return ret;
@@ -122,13 +128,15 @@ public final class JsonLoader
     public static JsonNode fromFile(final File file)
         throws IOException
     {
+        final Closer closer = Closer.create();
         final JsonNode ret;
+        final FileInputStream in;
 
-        final FileInputStream in = new FileInputStream(file);
         try {
+            in = closer.register(new FileInputStream(file));
             ret = READER.readTree(in);
         } finally {
-            in.close();
+            closer.close();
         }
 
         return ret;
