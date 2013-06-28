@@ -17,7 +17,9 @@
 
 package com.github.fge.jackson;
 
+import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
@@ -119,6 +121,10 @@ public final class JacksonUtils
         try {
             WRITER.writeValue(writer, node);
             writer.flush();
+        } catch (JsonGenerationException e) {
+            throw new RuntimeException("How did I get there??", e);
+        } catch (JsonMappingException e) {
+            throw new RuntimeException("How did I get there??", e);
         } catch (IOException ignored) {
             // cannot happen
         }
