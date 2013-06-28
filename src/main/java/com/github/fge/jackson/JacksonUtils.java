@@ -24,12 +24,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.google.common.collect.Maps;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
@@ -37,9 +37,10 @@ import java.util.Map;
 /**
  * Utility class for Jackson
  *
- * <p>This class provides a custom {@link JsonNodeFactory} and {@link
- * ObjectReader} which you should use preferably to your own (in particular,
- * the reader ensures that decimal values are read using {@link BigDecimal}.</p>
+ * <p>This class provides utility methods to get a {@link JsonNodeFactory} and
+ * a preconfigured {@link ObjectReader}. It can also be used to return
+ * preconfigured instances of {@link ObjectMapper} (see {@link #newMapper()}.
+ * </p>
  */
 public final class JacksonUtils
 {
@@ -49,11 +50,9 @@ public final class JacksonUtils
     private static final ObjectWriter WRITER;
 
     static {
-        final ObjectMapper mapper = new ObjectMapper().setNodeFactory(FACTORY)
-            .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
-
+        final ObjectMapper mapper = newMapper();
         READER = mapper.reader();
-        WRITER = mapper.writerWithDefaultPrettyPrinter();
+        WRITER = mapper.writer();
     }
 
     private JacksonUtils()
@@ -64,6 +63,7 @@ public final class JacksonUtils
      * Return a preconfigured {@link ObjectReader} to read JSON inputs
      *
      * @return the reader
+     * @see #newMapper()
      */
     public static ObjectReader getReader()
     {
@@ -113,6 +113,7 @@ public final class JacksonUtils
      *
      * @param node the JSON value to print
      * @return the pretty printed value as a string
+     * @see #newMapper()
      */
     public static String prettyPrint(final JsonNode node)
     {
@@ -130,5 +131,28 @@ public final class JacksonUtils
         }
 
         return writer.toString();
+    }
+
+    /**
+     * Return a preconfigured {@link ObjectMapper}
+     *
+     * <p>The returned mapper will have the following features enabled:</p>
+     *
+     * <ul>
+     *     <li>{@link DeserializationFeature#USE_BIG_DECIMAL_FOR_FLOATS};</li>
+     *     <li>{@link SerializationFeature#WRITE_BIGDECIMAL_AS_PLAIN};</li>
+     *     <li>{@link SerializationFeature#INDENT_OUTPUT}.</li>
+     * </ul>
+     *
+     * <p>This returns a new instance each time.</p>
+     *
+     * @return an {@link ObjectMapper}
+     */
+    public static ObjectMapper newMapper()
+    {
+        return new ObjectMapper().setNodeFactory(FACTORY)
+            .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+            .enable(SerializationFeature.WRITE_BIGDECIMAL_AS_PLAIN)
+            .enable(SerializationFeature.INDENT_OUTPUT);
     }
 }
