@@ -22,7 +22,7 @@ implementation over Jackson's `TreeNode`, along with a dedicated implementation 
 
 ## Versions
 
-The current verson is **1.3**. Its Javadoc is [available
+The current verson is **1.4**. Its Javadoc is [available
 online](http://fge.github.io/jackson-coreutils/index.html).
 
 ## Using in Gradle/Maven
