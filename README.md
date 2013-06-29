@@ -14,11 +14,8 @@ project for details.
 
 This package is meant to be used with Jackson 2.2.x. It provides the three following features:
 
-* it provides a default
-  [ObjectMapper](http://fasterxml.github.io/jackson-databind/javadoc/2.2.0/index.html?com/fasterxml/jackson/databind/ObjectMapper.html)
-  and
-  [ObjectReader](http://fasterxml.github.io/jackson-databind/javadoc/2.2.0/com/fasterxml/jackson/databind/ObjectReader.html)
-  to read/write numeric JSON values using their exact representations;
+* its `JsonLoader` class brings you a convenient way for loading JSON data from
+  a variety of sources: a string, an existing `InputStream` or `Reader`, etc;
 * it uses Guava's
   [Equivalence](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/base/Equivalence.html)
   over Jackson's
