@@ -10,15 +10,21 @@ Thanks to people who have contributed to this project. See file `CONTRIBUTORS.md
 
 ## What this is
 
-This package is meant to be used with Jackson 2.2.x. It provides the two following features:
+This package is meant to be used with Jackson 2.2.x. It provides the three following features:
 
+* it provides a default
+  [ObjectMapper](http://fasterxml.github.io/jackson-databind/javadoc/2.2.0/index.html?com/fasterxml/jackson/databind/ObjectMapper.html)
+  and
+  [ObjectReader](http://fasterxml.github.io/jackson-databind/javadoc/2.2.0/com/fasterxml/jackson/databind/ObjectReader.html)
+  to read/write numeric JSON values using their exact representations;
 * it uses Guava's
-[Equivalence](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/base/Equivalence.html)
-over Jackson's
-[JsonNode](http://fasterxml.github.com/jackson-databind/javadoc/2.1.1/com/fasterxml/jackson/databind/JsonNode.html)
-to provide a means to compare JSON number values mathematically;
-* it has a generalized [JSON Pointer](http://tools.ietf.org/html/rfc6901)
-implementation over Jackson's `TreeNode`, along with a dedicated implementation over `JsonNode`.
+  [Equivalence](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/base/Equivalence.html)
+  over Jackson's
+  [JsonNode](http://fasterxml.github.com/jackson-databind/javadoc/2.1.1/com/fasterxml/jackson/databind/JsonNode.html)
+  to provide a means to compare JSON number values mathematically;
+* it implements [JSON Pointer](http://tools.ietf.org/html/rfc6901)
+  over Jackson's `TreeNode`, and has a dedicated implementation (`JsonPointer`)
+  over Jackson's `JsonNode`.
 
 ## Versions
 
