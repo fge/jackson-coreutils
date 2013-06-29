@@ -1,14 +1,16 @@
 ## Read me first
 
-The license of this project is LGPLv3 or later. See file src/main/resources/LICENSE for the full
+The license of this project is LGPLv3 or later. See file `src/main/resources/LICENSE` for the full
 text.
 
-Note: this project uses [Gradle](http://www.gradle.org) as a build system. See file `BUILD.md` for
+This project uses [Gradle](http://www.gradle.org) as a build system. See file `BUILD.md` for
 details.
+
+Thanks to people who have contributed to this project. See file `CONTRIBUTORS.md` for details.
 
 ## What this is
 
-This package is meant to be used with Jackson 2.2.x. It provides two items:
+This package is meant to be used with Jackson 2.2.x. It provides the two following features:
 
 * it uses Guava's
 [Equivalence](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/base/Equivalence.html)
