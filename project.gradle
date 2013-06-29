@@ -10,12 +10,6 @@ project.ext {
     description = "JSON Pointer (RFC 6901) and numeric equality for Jackson (2.2.x)";
 };
 
-project.ext {
-    serviceClasses = [
-        "com.github.fge.msgsimple.serviceloader.MessageBundleProvider"
-    ];
-};
-
 /*
  * List of dependencies
  *
