@@ -18,7 +18,7 @@
 package com.github.fge.jackson.jsonpointer;
 
 import com.github.fge.msgsimple.bundle.MessageBundle;
-import com.github.fge.msgsimple.serviceloader.MessageBundleFactory;
+import com.github.fge.msgsimple.load.MessageBundles;
 import com.google.common.collect.ImmutableList;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -30,7 +30,7 @@ import static org.testng.Assert.*;
 public final class ReferenceTokenTest
 {
     private static final MessageBundle BUNDLE
-        = MessageBundleFactory.getBundle(JsonPointerMessages.class);
+        = MessageBundles.getBundle(JsonPointerMessages.class);
 
     @Test
     public void nullCookedRaisesError()

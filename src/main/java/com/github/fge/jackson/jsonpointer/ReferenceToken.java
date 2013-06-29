@@ -18,7 +18,7 @@
 package com.github.fge.jackson.jsonpointer;
 
 import com.github.fge.msgsimple.bundle.MessageBundle;
-import com.github.fge.msgsimple.serviceloader.MessageBundleFactory;
+import com.github.fge.msgsimple.load.MessageBundles;
 import com.google.common.collect.ImmutableList;
 
 import javax.annotation.concurrent.Immutable;
@@ -44,7 +44,7 @@ import java.util.List;
 public final class ReferenceToken
 {
     private static final MessageBundle BUNDLE
-        = MessageBundleFactory.getBundle(JsonPointerMessages.class);
+        = MessageBundles.getBundle(JsonPointerMessages.class);
     /**
      * The escape character in a cooked token
      */

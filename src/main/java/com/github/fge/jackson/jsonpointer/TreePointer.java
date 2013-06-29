@@ -21,7 +21,7 @@ import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
 import com.github.fge.msgsimple.bundle.MessageBundle;
-import com.github.fge.msgsimple.serviceloader.MessageBundleFactory;
+import com.github.fge.msgsimple.load.MessageBundles;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
@@ -58,7 +58,7 @@ public abstract class TreePointer<T extends TreeNode>
     implements Iterable<TokenResolver<T>>
 {
     protected static final MessageBundle BUNDLE
-        = MessageBundleFactory.getBundle(JsonPointerMessages.class);
+        = MessageBundles.getBundle(JsonPointerMessages.class);
     /**
      * The reference token separator
      */

@@ -23,7 +23,7 @@ import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jackson.NodeType;
 import com.github.fge.jackson.SampleNodeProvider;
 import com.github.fge.msgsimple.bundle.MessageBundle;
-import com.github.fge.msgsimple.serviceloader.MessageBundleFactory;
+import com.github.fge.msgsimple.load.MessageBundles;
 import com.google.common.collect.Lists;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -41,7 +41,7 @@ import static org.testng.Assert.*;
 public final class JsonPointerTest
 {
     private static final MessageBundle BUNDLE
-        = MessageBundleFactory.getBundle(JsonPointerMessages.class);
+        = MessageBundles.getBundle(JsonPointerMessages.class);
 
     private final JsonNode testData;
     private final JsonNode document;

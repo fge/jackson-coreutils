@@ -19,7 +19,7 @@ package com.github.fge.jackson.jsonpointer;
 
 import com.fasterxml.jackson.core.TreeNode;
 import com.github.fge.msgsimple.bundle.MessageBundle;
-import com.github.fge.msgsimple.serviceloader.MessageBundleFactory;
+import com.github.fge.msgsimple.load.MessageBundles;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import org.testng.annotations.Test;
@@ -33,7 +33,7 @@ import static org.testng.Assert.*;
 public final class TreePointerTest
 {
     private static final MessageBundle BUNDLE
-        = MessageBundleFactory.getBundle(JsonPointerMessages.class);
+        = MessageBundles.getBundle(JsonPointerMessages.class);
 
     @Test
     public void attemptToBuildTokensFromNullRaisesAnError()
