@@ -6,7 +6,9 @@ text.
 This project uses [Gradle](http://www.gradle.org) as a build system. See file `BUILD.md` for
 details.
 
-Thanks to people who have contributed to this project. See file `CONTRIBUTORS.md` for details.
+Credits where they are dued: other people have contributed to this project, and this project would
+not have reached its current state without them. Please refer to the `CONTRIBUTORS.md` file in this
+project for details.
 
 ## What this is
 
