@@ -204,8 +204,7 @@ public abstract class TreePointer<T extends TreeNode>
             return true;
         if (getClass() != obj.getClass())
             return false;
-        @SuppressWarnings("unchecked")
-        final TreePointer<T> other = (TreePointer<T>) obj;
+        final TreePointer<?> other = (TreePointer<?>) obj;
         return tokenResolvers.equals(other.tokenResolvers);
     }
 

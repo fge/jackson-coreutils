@@ -90,8 +90,7 @@ public abstract class TokenResolver<T extends TreeNode>
             return true;
         if (getClass() != obj.getClass())
             return false;
-        @SuppressWarnings("unchecked")
-        final TokenResolver<T> other = (TokenResolver<T>) obj;
+        final TokenResolver<?> other = (TokenResolver<?>) obj;
         return token.equals(other.token);
     }
 
