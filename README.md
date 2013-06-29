@@ -51,7 +51,7 @@ With Maven:
 
 ## Why
 
-### Mathematical value equality
+### Mathematically equivalent numeric value equality
 
 When reading JSON into a `JsonNode`, Jackson will serialize `1` as an `IntNode` but `1.0` as a
 `DoubleNode` (or a `DecimalNode`).
