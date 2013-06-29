@@ -120,6 +120,7 @@ public abstract class TreePointer<T extends TreeNode>
         int index;
         char c;
 
+        // TODO: see how this can be replaced with a CharBuffer -- seek etc
         while (!s.isEmpty()) {
             c = s.charAt(0);
             if (c != SLASH)
