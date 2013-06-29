@@ -104,40 +104,6 @@ public abstract class TreePointer<T extends TreeNode>
     }
 
     /**
-     * Decode an input into a list of reference tokens
-     *
-     * @param input the input
-     * @return the list of reference tokens
-     * @throws JsonPointerException input is not a valid JSON Pointer
-     * @throws NullPointerException input is null
-     */
-    protected static List<ReferenceToken> tokensFromInput(final String input)
-        throws JsonPointerException
-    {
-        String s = BUNDLE.checkNotNull(input, "nullInput");
-        final List<ReferenceToken> ret = Lists.newArrayList();
-        String cooked;
-        int index;
-        char c;
-
-        // TODO: see how this can be replaced with a CharBuffer -- seek etc
-        while (!s.isEmpty()) {
-            c = s.charAt(0);
-            if (c != SLASH)
-                throw new JsonPointerException(BUNDLE.getMessage("notSlash"));
-            s = s.substring(1);
-            index = s.indexOf(SLASH);
-            cooked = index == -1 ? s : s.substring(0, index);
-            ret.add(ReferenceToken.fromCooked(cooked));
-            if (index == -1)
-                break;
-            s = s.substring(index);
-        }
-
-        return ret;
-    }
-
-    /**
      * Traverse a node and return the result
      *
      * <p>Note that this method shortcuts: it stops at the first node it cannot
@@ -221,5 +187,39 @@ public abstract class TreePointer<T extends TreeNode>
             sb.append('/').append(tokenResolver);
 
         return sb.toString();
+    }
+
+    /**
+     * Decode an input into a list of reference tokens
+     *
+     * @param input the input
+     * @return the list of reference tokens
+     * @throws JsonPointerException input is not a valid JSON Pointer
+     * @throws NullPointerException input is null
+     */
+    protected static List<ReferenceToken> tokensFromInput(final String input)
+        throws JsonPointerException
+    {
+        String s = BUNDLE.checkNotNull(input, "nullInput");
+        final List<ReferenceToken> ret = Lists.newArrayList();
+        String cooked;
+        int index;
+        char c;
+
+        // TODO: see how this can be replaced with a CharBuffer -- seek etc
+        while (!s.isEmpty()) {
+            c = s.charAt(0);
+            if (c != SLASH)
+                throw new JsonPointerException(BUNDLE.getMessage("notSlash"));
+            s = s.substring(1);
+            index = s.indexOf(SLASH);
+            cooked = index == -1 ? s : s.substring(0, index);
+            ret.add(ReferenceToken.fromCooked(cooked));
+            if (index == -1)
+                break;
+            s = s.substring(index);
+        }
+
+        return ret;
     }
 }
