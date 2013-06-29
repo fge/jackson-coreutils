@@ -51,7 +51,7 @@ With Maven:
 
 ## Why
 
-### Mathematically equivalent numeric value equality
+### Numeric equivalence
 
 When reading JSON into a `JsonNode`, Jackson will serialize `1` as an `IntNode` but `1.0` as a
 `DoubleNode` (or a `DecimalNode`).
@@ -59,11 +59,10 @@ When reading JSON into a `JsonNode`, Jackson will serialize `1` as an `IntNode` 
 Understandably so, Jackson <b>will not</b> consider such nodes to be equal, since they do not share
 the same class. But, understandably so as well, some uses of JSON out there, including [JSON
 Schema](http://tools.ietf.org/html/draft-zyp-json-schema-04) and [JSON
-Patch](http://tools.ietf.org/html/rfc6902), want to consider such nodes as
-equal.
+Patch](http://tools.ietf.org/html/rfc6902), want to consider such nodes as equal.
 
 And this is where this package comes in. It allows you to consider that two numeric JSON values are
-mathematically equal -- recursively so. That is, JSON values `1` and `1.0` will be considered
+mathematically equal -- recursively so. That is, JSON values `1` and `1.0` _will_ be considered
 equivalent; but so will be all possible JSON representations of mathematical value 1 (including, for
 instance, `10e-1`). And evaluation is recursive, which means that:
 
@@ -85,23 +84,19 @@ JSON Pointer is an IETF draft which allows to unambiguously address any value in
 * [JSON Reference](http://tools.ietf.org/html/draft-pbryan-zyp-json-ref-03) (as the fragment part);
 * [JSON Patch](http://tools.ietf.org/html/rfc6902).
 
-The implementation in this package applies to all `TreeNode`s. If all goes to plan, it may be an
-integral part of a future Jackson tree model (see
-[jackson-tree](https://github.com/fge/jackson-tree)).
+The implementation in this package applies to all `TreeNode`s as of Jackson 2.2.x.
 
 ## Usage
 
 ### Numeric equivalence
 
-It is **highly recommended**, though not mandatory, that for accuracy reasons, you ask Jackson
-that all floating point numbers be deserialized as `BigDecimal` by default:
+For accuracy, it is **highly recommended** that you use this library's `JacksonUtils` class to
+obtain a mapper/reader with the ability to read arbitrarily large numeric instances from JSON
+values; if you don't, you may be (badly) surprised by the results of using the below feature.
 
-```java
-new ObjectMapper().enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
-```
-
-This package also provides facilities for reading `JsonNode`s using an `ObjectMapper` configured as
-above: `JacksonUtils` and `JsonLoader`. For instance:
+The recommended way to read any `JsonNode` instance is therefore to use the `JsonLoader` class, or,
+if you need to, grab a preconfigured `ObjectMapper` preconfigured for dealing with arbitrarily large
+numbers:
 
 ```java
 // Load a JsonNode with all decimals read as DecimalNode, from a file
@@ -112,8 +107,8 @@ final ObjectReader reader = JacksonUtils.getReader();
 final ObjectMapper mapper = JacksonUtils.newMapper();
 ```
 
-When having got hold of two `JsonNode` instances which you want to be equivalent if their JSON
-number values are the same, you can use:
+Given two `JsonNode` instances which you want to be equivalent if their JSON number values are the
+same, you can use:
 
 ```java
 if (JsonNumEquals.getInstance().equivalent(node1, node2))
