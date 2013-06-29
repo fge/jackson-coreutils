@@ -2,7 +2,7 @@
  * Project-specific settings. Unfortunately we cannot put the name in there!
  */
 group = "com.github.fge";
-version = "1.4-SNAPSHOT";
+version = "1.4";
 sourceCompatibility = "1.6";
 targetCompatibility = "1.6"; // defaults to sourceCompatibility
 
@@ -12,17 +12,15 @@ project.ext {
 
 /*
  * List of dependencies
- *
- * Transitive is sort of like Maven"s provided, except it won"t find its way
- * into runtime dependencies
  */
 dependencies {
     compile(group: "com.fasterxml.jackson.core", name: "jackson-databind",
         version: "2.2.2");
     compile(group: "com.google.guava", name: "guava", version: "14.0.1");
     compile(group: "com.github.fge", name: "msg-simple", version: "0.9");
+    // TODO: make this dependency provided when gradle has support for it
     compile(group: "com.google.code.findbugs", name: "jsr305", version: "2.0.1");
-    testCompile(group: "org.testng", name: "testng", version: "6.8") {
+    testCompile(group: "org.testng", name: "testng", version: "6.8.5") {
         exclude(group: "junit", module: "junit");
         exclude(group: "org.beanshell", module: "bsh");
         exclude(group: "org.yaml", module: "snakeyaml");
