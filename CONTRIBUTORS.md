@@ -1,4 +1,4 @@
-## Randly Watler
+## Randy Watler
 
 * Added `.parent()` to `JsonPointer` (darn useful!).
 
