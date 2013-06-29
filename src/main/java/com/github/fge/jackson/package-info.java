@@ -35,6 +35,7 @@
  *
  * <p>Finally, {@link com.github.fge.jackson.NodeType} is a utility enumeration
  * which distinguishes between all JSON node types defined by RFC 4627, plus
- * {@code integer} (used by JSON Schema).</p>
+ * {@code integer} (used by JSON Schema). Note that since Jackson 2.2, there is
+ * also {@link com.fasterxml.jackson.databind.JsonNode#getNodeType()}.</p>
  */
 package com.github.fge.jackson;
