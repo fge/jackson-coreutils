@@ -96,8 +96,7 @@ obtain a mapper/reader with the ability to read arbitrarily large numeric instan
 values; if you don't, you may be (badly) surprised by the results of using the below feature.
 
 The recommended way to read any `JsonNode` instance is therefore to use the `JsonLoader` class, or,
-if you need to, grab a preconfigured `ObjectMapper` preconfigured for dealing with arbitrarily large
-numbers:
+if you need to, grab an `ObjectMapper` preconfigured for dealing with arbitrarily large numbers:
 
 ```java
 // Load a JsonNode with all decimals read as DecimalNode, from a file
