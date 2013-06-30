@@ -34,10 +34,11 @@ online](http://fge.github.io/jackson-coreutils/index.html).
 
 With Gradle:
 
-```
+```groovy
 dependencies {
     compile(group: "com.github.fge", name: "jackson-coreutils", version: "yourVersionHere");
 }
+```
 
 With Maven:
 
