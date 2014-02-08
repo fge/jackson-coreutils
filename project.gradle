@@ -15,7 +15,7 @@ project.ext {
  */
 dependencies {
     compile(group: "com.fasterxml.jackson.core", name: "jackson-databind",
-        version: "2.2.2");
+        version: "2.2.3");
     compile(group: "com.google.guava", name: "guava", version: "16.0.1");
     compile(group: "com.github.fge", name: "msg-simple", version: "0.9");
     // TODO: make this dependency provided when gradle has support for it
