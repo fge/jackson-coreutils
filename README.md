@@ -1,7 +1,10 @@
 ## Read me first
 
-The license of this project is LGPLv3 or later. See file `src/main/resources/LICENSE` for the full
-text.
+This project, as of version 1.5, is licensed under both LGPLv3 and ASL 2.0. See
+file LICENSE for more details. Versions 1.0 and lower are licensed under LGPLv3
+only.
+
+**Note the "L" in "LGPL". LGPL AND GPL ARE QUITE DIFFERENT!**
 
 This project uses [Gradle](http://www.gradle.org) as a build system. See file `BUILD.md` for
 details.
