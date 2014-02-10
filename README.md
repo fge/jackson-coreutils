@@ -82,8 +82,9 @@ will be considered equivalent to:
 
 ### JSON Pointer
 
-JSON Pointer is an IETF draft which allows to unambiguously address any value into a JSON document
-(including the document itself, with the empty pointer). It is used in several IETF drafts:
+JSON Pointer is an IETF RFC (6901) which allows to unambiguously address any value into a JSON document
+(including the document itself, with the empty pointer). It is used in several
+IETF drafts and/or RFCs:
 
 * [JSON Reference](http://tools.ietf.org/html/draft-pbryan-zyp-json-ref-03) (as the fragment part);
 * [JSON Patch](http://tools.ietf.org/html/rfc6902).
