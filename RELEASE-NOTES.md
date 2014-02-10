@@ -1,3 +1,9 @@
+## 1.5
+
+* Dependencies updates
+* Change licensing to dual LGPL 3.0/ASL 2.0
+* Numerous README updates
+
 ## 1.4
 
 * Use msg-simple 0.9; do not rely on ServiceLoader anymore.
