@@ -22,7 +22,7 @@ This package is meant to be used with Jackson 2.2.x. It provides the three follo
 * it uses Guava's
   [Equivalence](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/base/Equivalence.html)
   over Jackson's
-  [JsonNode](http://fasterxml.github.com/jackson-databind/javadoc/2.1.1/com/fasterxml/jackson/databind/JsonNode.html)
+  [JsonNode](http://fasterxml.github.com/jackson-databind/javadoc/2.2.0/com/fasterxml/jackson/databind/JsonNode.html)
   to provide a means to compare JSON number values mathematically;
 * it implements [JSON Pointer](http://tools.ietf.org/html/rfc6901)
   over Jackson's `TreeNode`, and has a dedicated implementation (`JsonPointer`)
