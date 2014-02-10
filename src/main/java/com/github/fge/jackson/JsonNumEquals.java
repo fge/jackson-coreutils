@@ -127,7 +127,7 @@ public final class JsonNumEquals
          * Array
          */
         if (t.isArray()) {
-            for (final JsonNode element : t)
+            for (final JsonNode element: t)
                 ret = 31 * ret + doHash(element);
             return ret;
         }
