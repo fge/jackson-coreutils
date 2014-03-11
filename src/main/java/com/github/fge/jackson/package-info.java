@@ -20,14 +20,19 @@
  * Jackson utility classes
  *
  * <p>{@link com.github.fge.jackson.JsonLoader} contains various methods to load
- * JSON documents as {@link com.fasterxml.jackson.databind.JsonNode}s.You will
- * also want to use {@link com.github.fge.jackson.JacksonUtils} to grab a node
- * factory, reader and pretty printer for anything JSON.Compared to the basic
- * Jackson's {@link com.fasterxml.jackson.databind.ObjectMapper}, the one
- * provided by {@link com.github.fge.jackson.JacksonUtils} deserializes all
- * floating point numbers as {@link java.math.BigDecimal}s by default. This is
- * done using {@link
- * com.fasterxml.jackson.databind.DeserializationFeature#USE_BIG_DECIMAL_FOR_FLOATS}.</p>
+ * JSON documents as {@link com.fasterxml.jackson.databind.JsonNode}s. It uses
+ * a {@link com.github.fge.jackson.JsonNodeReader} with full read enabled (as
+ * such, parsing {@code []]} will generate an error where Jackson normally does
+ * not).</p>
+ *
+ * <p></p>You will also want to use {@link com.github.fge.jackson.JacksonUtils}
+ * to grab a node factory, reader and pretty printer for anything JSON. Compared
+ * to the basic Jackson's {@link com.fasterxml.jackson.databind.ObjectMapper},
+ * the one provided by {@link com.github.fge.jackson.JacksonUtils} deserializes
+ * all floating point numbers as {@link java.math.BigDecimal}s by default. This
+ * is done using {@link
+ * com.fasterxml.jackson.databind.DeserializationFeature#USE_BIG_DECIMAL_FOR_FLOATS}.
+ * </p>
  *
  * <p>{@link com.github.fge.jackson.JsonNumEquals} is an {@link
  * com.google.common.base.Equivalence} over {@link

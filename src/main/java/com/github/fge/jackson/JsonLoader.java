@@ -19,7 +19,6 @@
 package com.github.fge.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectReader;
 import com.google.common.io.Closer;
 
 import java.io.File;
@@ -33,15 +32,17 @@ import java.net.URL;
 /**
  * Utility class to load JSON values from various sources as {@link JsonNode}s.
  *
- * <p>This class uses {@link JacksonUtils#getReader()} as an {@link
- * ObjectReader} to parse JSON inputs.</p>
+ * <p>This class uses a {@link JsonNodeReader} with full read mode enabled to
+ * parse JSON inputs.</p>
+ *
+ * @see JsonNodeReader
  */
 public final class JsonLoader
 {
     /**
-     * The mapper which does everything behind the scenes...
+     * The reader
      */
-    private static final ObjectReader READER = JacksonUtils.getReader();
+    private static final JsonNodeReader READER = new JsonNodeReader(true);
 
     private JsonLoader()
     {
@@ -73,7 +74,7 @@ public final class JsonLoader
 
         try {
             in = closer.register(url.openStream());
-            ret = READER.readTree(in);
+            ret = READER.readFrom(in);
         } finally {
             closer.close();
         }
@@ -91,7 +92,7 @@ public final class JsonLoader
     public static JsonNode fromURL(final URL url)
         throws IOException
     {
-        return READER.readTree(url.openStream());
+        return READER.readFrom(url.openStream());
     }
 
     /**
@@ -110,7 +111,7 @@ public final class JsonLoader
 
         try {
             in = closer.register(new FileInputStream(path));
-            ret = READER.readTree(in);
+            ret = READER.readFrom(in);
         } finally {
             closer.close();
         }
@@ -135,7 +136,7 @@ public final class JsonLoader
 
         try {
             in = closer.register(new FileInputStream(file));
-            ret = READER.readTree(in);
+            ret = READER.readFrom(in);
         } finally {
             closer.close();
         }
@@ -153,7 +154,7 @@ public final class JsonLoader
     public static JsonNode fromReader(final Reader reader)
         throws IOException
     {
-        return READER.readTree(reader);
+        return READER.readFrom(reader);
     }
 
     /**
