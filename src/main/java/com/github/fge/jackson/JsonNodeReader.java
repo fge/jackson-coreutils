@@ -63,6 +63,16 @@ public final class JsonNodeReader
         factory = mapper.getFactory();
     }
 
+    public JsonNodeReader(final boolean fullRead)
+    {
+        this(EnumSet.noneOf(JsonParser.Feature.class), fullRead);
+    }
+
+    public JsonNodeReader()
+    {
+        this(false);
+    }
+
     public JsonNode readFrom(final InputStream in)
         throws IOException
     {

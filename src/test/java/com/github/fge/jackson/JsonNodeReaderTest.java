@@ -24,6 +24,8 @@ import org.testng.annotations.Test;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.EnumSet;
@@ -38,9 +40,17 @@ public final class JsonNodeReaderTest
         throws IOException
     {
         final InputStream in = spy(stringToInputStream("[]"));
-        new JsonNodeReader(EnumSet.noneOf(JsonParser.Feature.class), false)
-            .readFrom(in);
+        new JsonNodeReader().readFrom(in);
         verify(in).close();
+    }
+
+    @Test
+    public void readerIsClosedOnRead()
+        throws IOException
+    {
+        final Reader reader = spy(new StringReader("[]"));
+        new JsonNodeReader().readFrom(reader);
+        verify(reader).close();
     }
 
     @Test
@@ -59,8 +69,7 @@ public final class JsonNodeReaderTest
     public void noFullReadDoesNotThrowExceptionOnExtraInput()
         throws IOException
     {
-        final JsonNodeReader reader
-            = new JsonNodeReader(EnumSet.noneOf(JsonParser.Feature.class), false);
+        final JsonNodeReader reader = new JsonNodeReader(false);
         reader.readFrom(stringToInputStream("[]]"));
         assertTrue(true);
     }
@@ -69,8 +78,8 @@ public final class JsonNodeReaderTest
     public void fullReadThrowsExceptionOnExtraInput()
         throws UnsupportedEncodingException
     {
-        final JsonNodeReader reader
-            = new JsonNodeReader(EnumSet.noneOf(JsonParser.Feature.class), true);
+        final JsonNodeReader reader = new JsonNodeReader(
+            EnumSet.noneOf(JsonParser.Feature.class), true);
         final InputStream in = stringToInputStream("[]]");
         try {
             reader.readFrom(in);
@@ -78,8 +87,6 @@ public final class JsonNodeReaderTest
         } catch (IOException e) {
             assertTrue(e.getMessage().startsWith("trailing input detected"));
         }
-        assertTrue(true);
-
     }
 
     private static InputStream stringToInputStream(final String input)
