@@ -30,6 +30,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.EnumSet;
 
@@ -59,8 +60,12 @@ import java.util.EnumSet;
  *
  * <p>Note: the input sources are closed by the read methods.</p>
  *
+ * <p>Note also that all decimal numbers will be deserialized as {@link
+ * BigDecimal}s.</p>
+ *
  * @see JsonParser
  * @see JsonParser.Feature
+ * @see JacksonUtils#newMapper()
  * @since 1.6
  */
 @ThreadSafe
