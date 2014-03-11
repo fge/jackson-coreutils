@@ -20,7 +20,9 @@ package com.github.fge.jackson.jsonpointer;
 
 import com.fasterxml.jackson.core.TreeNode;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.node.MissingNode;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.github.fge.msgsimple.bundle.MessageBundle;
 import com.github.fge.msgsimple.load.MessageBundles;
 import com.google.common.collect.ImmutableList;
@@ -55,6 +57,7 @@ import java.util.List;
  * @param <T> the type of the tree
  */
 @ThreadSafe
+@JsonSerialize(using = ToStringSerializer.class)
 public abstract class TreePointer<T extends TreeNode>
     implements Iterable<TokenResolver<T>>
 {
