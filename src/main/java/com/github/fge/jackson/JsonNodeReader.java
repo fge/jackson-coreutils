@@ -24,15 +24,15 @@ import com.fasterxml.jackson.core.JsonLocation;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jackson.JacksonUtils;
 import com.google.common.io.Closer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.util.Collection;
 import java.util.EnumSet;
 
-public final class JsonReader
+public final class JsonNodeReader
 {
     private static final EnumSet<JsonParser.Feature> DEFAULT_FEATURES;
 
@@ -48,7 +48,7 @@ public final class JsonReader
     private final JsonFactory factory;
     private final boolean fullRead;
 
-    public JsonReader(final Collection<JsonParser.Feature> features,
+    public JsonNodeReader(final Collection<JsonParser.Feature> features,
         final boolean fullRead)
     {
         this.fullRead = fullRead;
@@ -63,7 +63,7 @@ public final class JsonReader
         factory = mapper.getFactory();
     }
 
-    public JsonNode fromInputStream(final InputStream in)
+    public JsonNode readFrom(final InputStream in)
         throws IOException
     {
         final Closer closer = Closer.create();
@@ -71,6 +71,20 @@ public final class JsonReader
 
         try {
             parser = closer.register(factory.createParser(in));
+            return readNode(parser);
+        } finally {
+            closer.close();
+        }
+    }
+
+    public JsonNode readFrom(final Reader reader)
+        throws IOException
+    {
+        final Closer closer = Closer.create();
+        final JsonParser parser;
+
+        try {
+            parser = closer.register(factory.createParser(reader));
             return readNode(parser);
         } finally {
             closer.close();

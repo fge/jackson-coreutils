@@ -31,15 +31,15 @@ import java.util.EnumSet;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
-public final class JsonReaderTest
+public final class JsonNodeReaderTest
 {
     @Test
     public void streamIsClosedOnRead()
         throws IOException
     {
         final InputStream in = spy(stringToInputStream("[]"));
-        new JsonReader(EnumSet.noneOf(JsonParser.Feature.class), false)
-            .fromInputStream(in);
+        new JsonNodeReader(EnumSet.noneOf(JsonParser.Feature.class), false)
+            .readFrom(in);
         verify(in).close();
     }
 
@@ -49,9 +49,9 @@ public final class JsonReaderTest
     {
         final Collection<JsonParser.Feature> features
             = EnumSet.of(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
-        final JsonReader reader = new JsonReader(features, false);
+        final JsonNodeReader reader = new JsonNodeReader(features, false);
         final InputStream in = spy(stringToInputStream("'hello'"));
-        assertEquals(reader.fromInputStream(in),
+        assertEquals(reader.readFrom(in),
             JacksonUtils.nodeFactory().textNode("hello"));
     }
 
@@ -59,9 +59,9 @@ public final class JsonReaderTest
     public void noFullReadDoesNotThrowExceptionOnExtraInput()
         throws IOException
     {
-        final JsonReader reader
-            = new JsonReader(EnumSet.noneOf(JsonParser.Feature.class), false);
-        reader.fromInputStream(stringToInputStream("[]]"));
+        final JsonNodeReader reader
+            = new JsonNodeReader(EnumSet.noneOf(JsonParser.Feature.class), false);
+        reader.readFrom(stringToInputStream("[]]"));
         assertTrue(true);
     }
 
@@ -69,11 +69,11 @@ public final class JsonReaderTest
     public void fullReadThrowsExceptionOnExtraInput()
         throws UnsupportedEncodingException
     {
-        final JsonReader reader
-            = new JsonReader(EnumSet.noneOf(JsonParser.Feature.class), true);
+        final JsonNodeReader reader
+            = new JsonNodeReader(EnumSet.noneOf(JsonParser.Feature.class), true);
         final InputStream in = stringToInputStream("[]]");
         try {
-            reader.fromInputStream(in);
+            reader.readFrom(in);
             fail("No exception thrown!");
         } catch (IOException e) {
             assertTrue(e.getMessage().startsWith("trailing input detected"));
