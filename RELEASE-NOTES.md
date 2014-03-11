@@ -1,3 +1,8 @@
+## 1.6
+
+* New `JsonNodeReader` class: full input read, failing on trailing content
+  (example: `[]]`).
+
 ## 1.5
 
 * Dependencies updates
