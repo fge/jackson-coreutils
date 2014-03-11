@@ -26,12 +26,44 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Closer;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.Collection;
 import java.util.EnumSet;
 
+/**
+ * Class dedicated to reading JSON values from {@link InputStream}s and {@link
+ * Reader}s
+ *
+ * <p>You can customize this class in two ways:</p>
+ *
+ * <ul>
+ *     <li>passing custom parsing options;</li>
+ *     <li>perform a full read or not.</li>
+ * </ul>
+ *
+ * <p>The latter option is to circumvent the default behaviour of Jackson when
+ * deserializing from an input source; by default, it will stop reading from the
+ * source when it has successfully read a value. For instance, given this input;
+ * </p>
+ *
+ * <pre>
+ *     []]]
+ * </pre>
+ *
+ * <p>it will read the initial empty array ({@code []}) and stop there. With
+ * this class, you have the option of reading all the input and deem it as
+ * invalid given the trailing input.</p>
+ *
+ * <p>Note: the input sources are closed by the read methods.</p>
+ *
+ * @see JsonParser
+ * @see JsonParser.Feature
+ * @since 1.6
+ */
+@ThreadSafe
 public final class JsonNodeReader
 {
     private static final EnumSet<JsonParser.Feature> DEFAULT_FEATURES;
@@ -48,6 +80,12 @@ public final class JsonNodeReader
     private final JsonFactory factory;
     private final boolean fullRead;
 
+    /**
+     * Main constructor
+     *
+     * @param features list of parsing features
+     * @param fullRead whether to perform a full read of sources
+     */
     public JsonNodeReader(final Collection<JsonParser.Feature> features,
         final boolean fullRead)
     {
@@ -63,16 +101,37 @@ public final class JsonNodeReader
         factory = mapper.getFactory();
     }
 
+    /**
+     * Alternative constructor
+     *
+     * <p>This calls the main constructor with an empty parser feature set.</p>
+     *
+     * @param fullRead whether to perform a full read of sources
+     */
     public JsonNodeReader(final boolean fullRead)
     {
         this(EnumSet.noneOf(JsonParser.Feature.class), fullRead);
     }
 
+    /**
+     * Alternative constructor
+     *
+     * <p>This constructor will return a "default" reader: no parsing options,
+     * no full read performed.</p>
+     */
     public JsonNodeReader()
     {
         this(false);
     }
 
+    /**
+     * Read a JSON value from an {@link InputStream}
+     *
+     * @param in the input stream
+     * @return the value
+     * @throws IOException malformed input, or problem encountered when reading
+     * from the stream
+     */
     public JsonNode readFrom(final InputStream in)
         throws IOException
     {
@@ -87,6 +146,14 @@ public final class JsonNodeReader
         }
     }
 
+    /**
+     * Read a JSON value from a {@link Reader}
+     *
+     * @param reader the reader
+     * @return the value
+     * @throws IOException malformed input, or problem encountered when reading
+     * from the reader
+     */
     public JsonNode readFrom(final Reader reader)
         throws IOException
     {
