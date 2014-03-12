@@ -25,10 +25,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.fge.jackson.JacksonUtils;
 import com.github.fge.jackson.NodeType;
 import com.github.fge.jackson.SampleNodeProvider;
+import com.google.common.collect.Lists;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.Iterator;
+import java.util.List;
 
 import static org.testng.Assert.*;
 
@@ -98,23 +100,31 @@ public final class JsonNodeResolverTest
         assertEquals(target, resolver.get(node));
     }
 
-    @Test
-    public void invalidIndicesYieldNull()
+    @DataProvider
+    public Iterator<Object[]> invalidIndices()
+    {
+        final List<Object[]> list = Lists.newArrayList();
+
+        list.add(new Object[] { "-1" });
+        list.add(new Object[] { "232398087298731987987232" });
+        list.add(new Object[] { "00" });
+        list.add(new Object[] { "0 " });
+        list.add(new Object[] { " 0" });
+
+        return list.iterator();
+    }
+
+
+    @Test(dataProvider = "invalidIndices")
+    public void invalidIndicesYieldNull(final String raw)
     {
         final JsonNode target = FACTORY.textNode("b");
         final ArrayNode node = FACTORY.arrayNode();
 
         node.add(target);
 
-        ReferenceToken refToken;
-        JsonNodeResolver resolver;
-
-        refToken = ReferenceToken.fromInt(-1);
-        resolver = new JsonNodeResolver(refToken);
-        assertNull(resolver.get(node));
-
-        refToken = ReferenceToken.fromRaw("00");
-        resolver = new JsonNodeResolver(refToken);
+        final ReferenceToken refToken = ReferenceToken.fromRaw(raw);
+        final JsonNodeResolver resolver = new JsonNodeResolver(refToken);
         assertNull(resolver.get(node));
     }
 }
