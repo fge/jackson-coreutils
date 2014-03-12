@@ -2,6 +2,7 @@
 
 * New `JsonNodeReader` class: full input read, failing on trailing content
   (example: `[]]`).
+* `JsonPointer` now supports Jackson {de,}serialization.
 
 ## 1.5
 
