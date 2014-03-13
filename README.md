@@ -190,3 +190,14 @@ ptr.append("foo");
 ptr = ptr.append("foo");
 ```
 
+Then, to use it, use either the `.get()` or the `.path()` methods:
+
+```java
+// "node" is a JsonNode
+// .get() returns null if there is no such path
+final JsonNode child = ptr.get(node);
+// Test if a path exists with .path()
+if (!ptr.path(node).isMissingNode())
+    // do something
+```
+
