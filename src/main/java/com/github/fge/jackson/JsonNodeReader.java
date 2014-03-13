@@ -58,6 +58,9 @@ import java.util.EnumSet;
  * this class, you have the option of reading all the input and deem it as
  * invalid given the trailing input.</p>
  *
+ * <p>An instance of this class provided by the no-arg constructor will have no
+ * parsing options and will perform a full read.</p>
+ *
  * <p>Note: the input sources are closed by the read methods.</p>
  *
  * <p>Note also that all decimal numbers will be deserialized as {@link
@@ -119,14 +122,11 @@ public final class JsonNodeReader
     }
 
     /**
-     * Alternative constructor
-     *
-     * <p>This constructor will return a "default" reader: no parsing options,
-     * no full read performed.</p>
+     * No-arg constructor (see description)
      */
     public JsonNodeReader()
     {
-        this(false);
+        this(true);
     }
 
     /**

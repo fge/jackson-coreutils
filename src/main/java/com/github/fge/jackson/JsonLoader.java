@@ -42,7 +42,7 @@ public final class JsonLoader
     /**
      * The reader
      */
-    private static final JsonNodeReader READER = new JsonNodeReader(true);
+    private static final JsonNodeReader READER = new JsonNodeReader();
 
     private JsonLoader()
     {

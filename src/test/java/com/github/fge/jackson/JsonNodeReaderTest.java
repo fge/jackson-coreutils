@@ -78,8 +78,21 @@ public final class JsonNodeReaderTest
     public void fullReadThrowsExceptionOnExtraInput()
         throws UnsupportedEncodingException
     {
-        final JsonNodeReader reader = new JsonNodeReader(
-            EnumSet.noneOf(JsonParser.Feature.class), true);
+        final JsonNodeReader reader = new JsonNodeReader(true);
+        final InputStream in = stringToInputStream("[]]");
+        try {
+            reader.readFrom(in);
+            fail("No exception thrown!");
+        } catch (IOException e) {
+            assertTrue(e.getMessage().startsWith("trailing input detected"));
+        }
+    }
+
+    @Test
+    public void defaultReaderDoesFullRead()
+        throws UnsupportedEncodingException
+    {
+        final JsonNodeReader reader = new JsonNodeReader();
         final InputStream in = stringToInputStream("[]]");
         try {
             reader.readFrom(in);
