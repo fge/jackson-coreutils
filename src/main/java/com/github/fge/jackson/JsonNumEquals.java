@@ -34,7 +34,7 @@ import java.util.Set;
  * contract. And in fact, it does it too well for JSON Schema.</p>
  *
  * <p>For instance, it considers numeric nodes {@code 1} and {@code 1.0} to be
- * different nodes, which is true. But some IETF RFCs and drafts (among  * them,
+ * different nodes, which is true. But some IETF RFCs and drafts (among  them,
  * JSON Schema and JSON Patch) mandate that numeric JSON values be considered
  * equal if their mathematical value is the same. This class implements this
  * kind of equality.</p>
