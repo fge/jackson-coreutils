@@ -17,16 +17,11 @@ project for details.
 
 This package is meant to be used with Jackson 2.2.x. It provides the three following features:
 
-* its `JsonLoader` class brings you a convenient way for loading JSON data from
-  a variety of sources: a string, an existing `InputStream` or `Reader`, etc;
-* it uses Guava's
-  [Equivalence](http://docs.guava-libraries.googlecode.com/git/javadoc/com/google/common/base/Equivalence.html)
-  over Jackson's
-  [JsonNode](http://fasterxml.github.com/jackson-databind/javadoc/2.2.0/com/fasterxml/jackson/databind/JsonNode.html)
-  to provide a means to compare JSON number values mathematically;
-* it implements [JSON Pointer](http://tools.ietf.org/html/rfc6901)
-  over Jackson's `TreeNode`, and has a dedicated implementation (`JsonPointer`)
-  over Jackson's `JsonNode`.
+* write/read JSON decimal numbers using `BigDecimal` (instead of `double`) for optimal numeric
+  precision;
+* (since 1.6) preconfigured JSON reader with trailing data detection support (see below);
+* JSON numeric equivalence;
+* [JSON Pointer](http://tools.ietf.org/html/rfc6901) support.
 
 ## Versions
 
@@ -53,9 +48,32 @@ With Maven:
 </dependency>
 ```
 
-## Why
+## Description
 
-### Numeric equivalence
+### `BigDecimal` to read decimal values (instead of `double`)
+
+All classes in this package whose purpose is to load JSON data (`JsonLoader`, Jackson mappers
+provided by `JacksonUtils`, and `JsonLoader` since version 1.6) will deserialize all decimal
+instances using `BigDecimal` (more appropriately, Jackson's `DecimalNode`). This allows to retain
+the numeric value with full precision and not be a victim of IEEE 754's limitations in this regard.
+
+### Trailing data detection support (since 1.6)
+
+Jackson's default JSON deserialization, when reading an input such as this:
+
+```
+[]]
+```
+
+will read the initial value (`[]`) and stop there, ignoring the trailing `]`. This behaviour can be
+beneficial in the event that you have a "streaming" JSON source, however it is not suitable if you
+know you have only one JSON value to read and want to report an error if trailing data is detected.
+
+This package provides a `JsonNodeReader` class which allows you to report an error on trailing input;
+it also allows you to add parsing options (such as the ones you would add in an `ObjectMapper`:
+allow unquoted field names etc).
+
+### JSON numeric equivalence
 
 When reading JSON into a `JsonNode`, Jackson will serialize `1` as an `IntNode` but `1.0` as a
 `DoubleNode` (or a `DecimalNode`).
@@ -63,12 +81,13 @@ When reading JSON into a `JsonNode`, Jackson will serialize `1` as an `IntNode` 
 Understandably so, Jackson <b>will not</b> consider such nodes to be equal, since they do not share
 the same class. But, understandably so as well, some uses of JSON out there, including [JSON
 Schema](http://tools.ietf.org/html/draft-zyp-json-schema-04) and [JSON
-Patch](http://tools.ietf.org/html/rfc6902), want to consider such nodes as equal.
+Patch](http://tools.ietf.org/html/rfc6902)'s test operation, want to consider such nodes as equal.
 
-And this is where this package comes in. It allows you to consider that two numeric JSON values are
-mathematically equal -- recursively so. That is, JSON values `1` and `1.0` _will_ be considered
-equivalent; but so will be all possible JSON representations of mathematical value 1 (including, for
-instance, `10e-1`). And evaluation is recursive, which means that:
+This package provides an implementation of Guava's `Equivalence` which considers that two numeric
+JSON values are equal if their value is mathematically equal -- recursively so. That is, JSON values
+`1` and `1.0` _will_ be considered equivalent; but so will be all possible JSON representations of
+mathematical value 1 (including, for instance, `10e-1`). And evaluation is recursive, which means
+that:
 
 ```json
 [ 1, 2, 3 ]
@@ -89,27 +108,43 @@ IETF drafts and/or RFCs:
 * [JSON Reference](http://tools.ietf.org/html/draft-pbryan-zyp-json-ref-03) (as the fragment part);
 * [JSON Patch](http://tools.ietf.org/html/rfc6902).
 
-The implementation in this package applies to all `TreeNode`s as of Jackson 2.2.x.
+The implementation in this package applies to all `TreeNode`s as of Jackson 2.2.x; this includes
+`JsonNode`.
 
 ## Usage
 
-### Numeric equivalence
+### Read JSON using `BigDecimal` for decimal numbers
 
-For accuracy, it is **highly recommended** that you use this library's `JacksonUtils` class to
-obtain a mapper/reader with the ability to read arbitrarily large numeric instances from JSON
-values; if you don't, you may be (badly) surprised by the results of using the below feature.
-
-The recommended way to read any `JsonNode` instance is therefore to use the `JsonLoader` class, or,
-if you need to, grab an `ObjectMapper` preconfigured for dealing with arbitrarily large numbers:
+Several options are available:
 
 ```java
-// Load a JsonNode with all decimals read as DecimalNode, from a file
-final JsonNode node = JsonLoader.fromFile("/path/to/file.json");
-// Get a preconfigured reader
-final ObjectReader reader = JacksonUtils.getReader();
-// Get a preconfigured ObjectMapper
+// JsonLoader
+final JsonNode node = JsonLoader.fromFile(new File("whatever.json"));
+final JsonNode node = JsonLoader.fromResource("/in/class/path/my.json");
+// Get a preconfigured ObjectMapper or reader with BigDecimal deserialization
 final ObjectMapper mapper = JacksonUtils.newMapper();
+final ObjectReader reader = JacksonUtils.getReader();
+// Get a JsonNodeReader; see below
+final JsonNodeReader reader = new JsonNodeReader();
 ```
+
+### Read JSON with trailing data detection support
+
+The class to use is `JsonNodeReader`:
+
+```java
+// Default reader, no additional options
+final JsonNodeReader reader = new JsonNodeReader;
+// Don't fail on trailing data
+final JsonNodeReader reader = new JsonNodeReader(false);
+// Fail on trailing data; allow comments
+final Set<JsonParser.Feature> set = EnumSet.of(JsonParser.Feature.ALLOW_COMMENTS);
+final JsonNodeReader reader = new JsonNodeReader(set, true);
+```
+
+Note that the `JsonLoader` class uses a default `JsonNodeReader`.
+
+### Numeric equivalence
 
 Given two `JsonNode` instances which you want to be equivalent if their JSON number values are the
 same, you can use:
@@ -135,8 +170,6 @@ set.add(eq.wrap(node2));
 
 ### JSON Pointer
 
-This section concentrates on the `JsonNode` specific JSON Pointer implementation: `JsonNode`.
-
 There are several ways you can build one:
 
 ```java
@@ -148,7 +181,7 @@ final JsonPointer ptr = JsonPointer.of("foo", "bar", 1); // Yields pointer "/foo
 final JsonPointer parent = ptr.parent();
 ```
 
-Note that `JsonPointer` (and, for that matter, `TreePointer` as well) is **immutable**:
+Note that `JsonPointer` is **immutable**:
 
 ```java
 // DON'T DO THAT: value of "ptr" will not change
