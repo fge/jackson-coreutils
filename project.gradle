@@ -2,12 +2,12 @@
  * Project-specific settings. Unfortunately we cannot put the name in there!
  */
 group = "com.github.fge";
-version = "1.6-SNAPSHOT";
+version = "2.0-SNAPSHOT";
 sourceCompatibility = "1.6";
 targetCompatibility = "1.6"; // defaults to sourceCompatibility
 
 project.ext {
-    description = "JSON Pointer (RFC 6901) and numeric equality for Jackson (2.2.x)";
+    description = "JSON Pointer (RFC 6901) and numeric equality for Jackson (2.3.x)";
 };
 
 /*
@@ -15,7 +15,7 @@ project.ext {
  */
 dependencies {
     compile(group: "com.fasterxml.jackson.core", name: "jackson-databind",
-        version: "2.2.3");
+        version: "2.3.2");
     compile(group: "com.google.guava", name: "guava", version: "16.0.1");
     compile(group: "com.github.fge", name: "msg-simple", version: "1.0");
     compile(group: "com.google.code.findbugs", name: "jsr305",
