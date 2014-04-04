@@ -68,7 +68,12 @@ public final class LineRecorderJsonParserTest
     @DataProvider
     public Iterator<Object[]> getLineData()
     {
-        final List<String> list = ImmutableList.of("primitiveOnFirstLine");
+        final List<String> list = ImmutableList.of(
+            "primitiveOnFirstLine",
+            "primitiveNotOnFirstLine",
+            "arrayOfPrimitives",
+            "objectOfPrimitives"
+        );
 
         return Iterables.transform(list, STRING_TO_OBJECT_ARRAY).iterator();
     }
