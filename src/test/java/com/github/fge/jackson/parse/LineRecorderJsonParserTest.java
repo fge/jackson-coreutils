@@ -22,12 +22,15 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jackson.jsonpointer.JsonPointer;
-import com.google.common.collect.Lists;
+import com.google.common.base.Function;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.io.Closer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
@@ -40,6 +43,17 @@ public final class LineRecorderJsonParserTest
 {
     private static final String INCORRECT_LINE_INFO
         = "generated line info is incorrect; expected: %s, actual: %s";
+
+    private static final Function<String, Object[]> STRING_TO_OBJECT_ARRAY
+        = new Function<String, Object[]>()
+    {
+        @Nullable
+        @Override
+        public Object[] apply(@Nullable final String input)
+        {
+            return new Object[] { input };
+        }
+    };
 
     private JsonFactory factory;
     private ObjectMapper mapper;
@@ -54,10 +68,9 @@ public final class LineRecorderJsonParserTest
     @DataProvider
     public Iterator<Object[]> getLineData()
     {
-        final List<Object[]> list = Lists.newArrayList();
+        final List<String> list = ImmutableList.of("primitiveOnFirstLine");
 
-        list.add(new Object[] { "1" });
-        return list.iterator();
+        return Iterables.transform(list, STRING_TO_OBJECT_ARRAY).iterator();
     }
 
     @Test(dataProvider = "getLineData")
