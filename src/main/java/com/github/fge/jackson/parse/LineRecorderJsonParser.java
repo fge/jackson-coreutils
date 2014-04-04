@@ -25,7 +25,6 @@ import com.fasterxml.jackson.core.JsonStreamContext;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.util.JsonParserDelegate;
 import com.github.fge.jackson.jsonpointer.JsonPointer;
-import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 
 import java.io.IOException;
@@ -34,12 +33,9 @@ import java.util.Map;
 public final class LineRecorderJsonParser
     extends JsonParserDelegate
 {
-    private static final Joiner.MapJoiner JOINER
-        = Joiner.on("; ").withKeyValueSeparator(": ").useForNull("NULL!");
     private final Map<JsonPointer, Integer> lines = Maps.newHashMap();
     private JsonPointer ptr = JsonPointer.empty();
     private boolean seenRoot = false;
-    private final Map<String, Object> info = Maps.newLinkedHashMap();
 
     public LineRecorderJsonParser(final JsonParser d)
     {
@@ -53,17 +49,6 @@ public final class LineRecorderJsonParser
         final JsonToken token = super.nextToken();
         final JsonStreamContext context = getParsingContext();
         final JsonLocation location = getCurrentLocation();
-//        info.put("token", token);
-//        info.put("line", location.getLineNr());
-//        info.put("inRoot", context.inRoot());
-//        info.put("inArray", context.inArray());
-//        info.put("index", context.getCurrentIndex());
-//        info.put("inObject", context.inObject());
-//        info.put("memberName", context.getCurrentName());
-//        info.put("nrEntries", context.getEntryCount());
-//        info.put("type", context.getTypeDesc());
-//        JOINER.appendTo(System.out, info);
-//        System.out.println();
         processLineEntry(token, location, context);
         return token;
     }
@@ -71,6 +56,9 @@ public final class LineRecorderJsonParser
     private void processLineEntry(final JsonToken token,
         final JsonLocation location, final JsonStreamContext context)
     {
+        /*
+         * Root needs to be handled specially.
+         */
         if (!seenRoot) {
             final int line = location.getLineNr();
             System.out.printf("ENTRY: \"%s\" -> %d\n", ptr, line);
@@ -79,25 +67,42 @@ public final class LineRecorderJsonParser
             return;
         }
 
+        /*
+         * We get that if JSON Pointer "" points to a container... We need to
+         * skip that
+         */
         if (context.inRoot())
             return;
 
+        /*
+         * If the end of a container, "pop" one level
+         */
         if (token == JsonToken.END_OBJECT || token == JsonToken.END_ARRAY) {
             ptr = ptr.parent();
             return;
         }
 
+        /*
+         * This is not addressable...
+         */
         if (token == JsonToken.FIELD_NAME)
             return;
 
         final JsonStreamContext parent = context.getParent();
         final int line = location.getLineNr();
 
+        /*
+         * But this is; however we need to know what the parent is to do things
+         * correctly, delegate to another method
+         */
         if (token == JsonToken.START_ARRAY || token == JsonToken.START_OBJECT) {
             startContainer(parent, line);
             return;
         }
 
+        /*
+         * OK, "normal" entry, build the pointer
+         */
         final JsonPointer entryPointer;
 
         if (context.inArray())
@@ -107,38 +112,6 @@ public final class LineRecorderJsonParser
 
         System.out.printf("ENTRY: \"%s\" -> %d\n", entryPointer, line);
         lines.put(entryPointer, line);
-    }
-
-    private void handleInObject(final JsonToken token,
-        final JsonLocation location, final JsonStreamContext context)
-    {
-        final JsonStreamContext parent = context.getParent();
-        final int line = location.getLineNr();
-
-        if (token == JsonToken.START_OBJECT) {
-            startContainer(parent, line);
-            return;
-        }
-
-        System.out.printf("ENTRY: \"%s\" -> %d\n",
-            ptr.append(context.getCurrentName()), line);
-        lines.put(ptr.append(context.getCurrentName()), line);
-    }
-
-    private void handleInArray(final JsonToken token,
-        final JsonLocation location, final JsonStreamContext context)
-    {
-        final JsonStreamContext parent = context.getParent();
-        final int line = location.getLineNr();
-
-        if (token == JsonToken.START_ARRAY) {
-            startContainer(parent, line);
-            return;
-        }
-
-        System.out.printf("ENTRY: \"%s\" -> %d\n",
-            ptr.append(context.getCurrentIndex()), line);
-        lines.put(ptr.append(context.getCurrentIndex()), line);
     }
 
     private void startContainer(final JsonStreamContext parent, final int line)
