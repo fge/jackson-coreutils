@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.JsonStreamContext;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.util.JsonParserDelegate;
 import com.github.fge.jackson.jsonpointer.JsonPointer;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 
 import java.io.IOException;
@@ -51,6 +52,11 @@ public final class LineRecorderJsonParser
         final JsonLocation location = getCurrentLocation();
         processLineEntry(token, location, context);
         return token;
+    }
+
+    public Map<JsonPointer, Integer> getLineInfo()
+    {
+        return ImmutableMap.copyOf(lines);
     }
 
     private void processLineEntry(final JsonToken token,

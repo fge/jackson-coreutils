@@ -40,7 +40,6 @@ public final class LineTesting
             in = closer.register(LineTesting.class.getResourceAsStream
                 ("/testfile.json"));
             mapper.readTree(in);
-            mapper.readTree("true");
         } finally {
             closer.close();
         }
