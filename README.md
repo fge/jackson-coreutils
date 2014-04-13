@@ -57,7 +57,7 @@ provided by `JacksonUtils`, and `JsonLoader` since version 1.6) will deserialize
 instances using `BigDecimal` (more appropriately, Jackson's `DecimalNode`). This allows to retain
 the numeric value with full precision and not be a victim of IEEE 754's limitations in this regard.
 
-### Trailing data detection support (since 1.6)
+### Trailing data detection (since 1.6)
 
 Jackson's default JSON deserialization, when reading an input such as this:
 
@@ -69,9 +69,7 @@ will read the initial value (`[]`) and stop there, ignoring the trailing `]`. Th
 beneficial in the event that you have a "streaming" JSON source, however it is not suitable if you
 know you have only one JSON value to read and want to report an error if trailing data is detected.
 
-This package provides a `JsonNodeReader` class which allows you to report an error on trailing input;
-it also allows you to add parsing options (such as the ones you would add in an `ObjectMapper`:
-allow unquoted field names etc).
+This package provides a `JsonNodeReader` class which will fail with an exception on trailing input.
 
 ### JSON numeric equivalence
 
@@ -134,15 +132,16 @@ The class to use is `JsonNodeReader`:
 
 ```java
 // Default reader, no additional options
-final JsonNodeReader reader = new JsonNodeReader;
-// Don't fail on trailing data
-final JsonNodeReader reader = new JsonNodeReader(false);
-// Fail on trailing data; allow comments
-final Set<JsonParser.Feature> set = EnumSet.of(JsonParser.Feature.ALLOW_COMMENTS);
-final JsonNodeReader reader = new JsonNodeReader(set, true);
+final JsonNodeReader reader = new JsonNodeReader();
+// Provide a custom ObjectMapper
+final ObjectMapper mapper = ...;
+final JsonNodeReader reader = new JsonNodeReader(mapper);
+// Read from an InputStream, a Reader
+final JsonNode node = reader.fromInputStream(...);
+final JsonNode node = reader.fromReader(...);
 ```
 
-Note that the `JsonLoader` class uses a default `JsonNodeReader`.
+Note that the `JsonLoader` class uses a `JsonNodeReader`.
 
 ### Numeric equivalence
 
