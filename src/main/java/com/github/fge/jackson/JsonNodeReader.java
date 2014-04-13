@@ -20,106 +20,58 @@
 package com.github.fge.jackson;
 
 
-import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonLocation;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.github.fge.Builder;
+import com.github.fge.msgsimple.bundle.MessageBundle;
+import com.github.fge.msgsimple.bundle.PropertiesBundle;
 import com.google.common.io.Closer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.EnumSet;
 
 /**
  * Class dedicated to reading JSON values from {@link InputStream}s and {@link
  * Reader}s
  *
- * <p>You can customize this class in two ways:</p>
- *
- * <ul>
- *     <li>passing custom parsing options;</li>
- *     <li>perform a full read or not.</li>
- * </ul>
- *
- * <p>The latter option is to circumvent the default behaviour of Jackson when
- * deserializing from an input source; by default, it will stop reading from the
- * source when it has successfully read a value. For instance, given this input;
- * </p>
+ * <p>This class wraps a Jackson {@link ObjectMapper} so that it read one, and
+ * only one, JSON text from a source. By default, when you read and map an
+ * input source, Jackson will stop after it has read the first valid JSON text;
+ * this means, for instance, that with this as an input:</p>
  *
  * <pre>
  *     []]]
  * </pre>
  *
- * <p>it will read the initial empty array ({@code []}) and stop there. With
- * this class, you have the option of reading all the input and deem it as
- * invalid given the trailing input.</p>
- *
- * <p>An instance of this class provided by the no-arg constructor will have no
- * parsing options and will perform a full read.</p>
+ * <p>it will read the initial empty array ({@code []}) and stop there. This
+ * class, instead, will peek to see whether anything is after the initial array,
+ * and throw an exception if it finds anything.</p>
  *
  * <p>Note: the input sources are closed by the read methods.</p>
  *
- * <p>Note also that all decimal numbers will be deserialized as {@link
- * BigDecimal}s.</p>
- *
- * @see JsonParser
- * @see JsonParser.Feature
- * @see JacksonUtils#newMapper()
+ * @see ObjectMapper#readValues(JsonParser, Class)
  * @since 1.6
  */
 @ThreadSafe
 public final class JsonNodeReader
 {
-    private static final EnumSet<JsonParser.Feature> DEFAULT_FEATURES;
+    private static final MessageBundle BUNDLE
+        = PropertiesBundle.forPath("/com/github/fge/jackson/jsonNodeReader");
 
-    static {
-        final EnumSet<JsonParser.Feature> set
-            = EnumSet.noneOf(JsonParser.Feature.class);
-        for (final JsonParser.Feature feature: JsonParser.Feature.values())
-            if (feature.enabledByDefault())
-                set.add(feature);
-        DEFAULT_FEATURES = EnumSet.copyOf(set);
-    }
+    private final ObjectReader reader;
 
-    private final JsonFactory factory;
-    private final boolean fullRead;
-
-    /**
-     * Main constructor
-     *
-     * @param features list of parsing features
-     * @param fullRead whether to perform a full read of sources
-     */
-    public JsonNodeReader(final Collection<JsonParser.Feature> features,
-        final boolean fullRead)
+    public JsonNodeReader(final ObjectMapper mapper)
     {
-        this.fullRead = fullRead;
-        final ObjectMapper mapper = JacksonUtils.newMapper();
-        final EnumSet<JsonParser.Feature> set
-            = EnumSet.copyOf(DEFAULT_FEATURES);
-        set.addAll(features);
-
-        for (final JsonParser.Feature feature: set)
-            mapper.configure(feature, true);
-
-        factory = mapper.getFactory();
-    }
-
-    /**
-     * Alternative constructor
-     *
-     * <p>This calls the main constructor with an empty parser feature set.</p>
-     *
-     * @param fullRead whether to perform a full read of sources
-     */
-    public JsonNodeReader(final boolean fullRead)
-    {
-        this(EnumSet.noneOf(JsonParser.Feature.class), fullRead);
+        reader = mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true)
+            .reader(JsonNode.class);
     }
 
     /**
@@ -127,7 +79,7 @@ public final class JsonNodeReader
      */
     public JsonNodeReader()
     {
-        this(true);
+        this(JacksonUtils.newMapper());
     }
 
     /**
@@ -138,15 +90,17 @@ public final class JsonNodeReader
      * @throws IOException malformed input, or problem encountered when reading
      * from the stream
      */
-    public JsonNode readFrom(final InputStream in)
+    public JsonNode fromInputStream(final InputStream in)
         throws IOException
     {
         final Closer closer = Closer.create();
         final JsonParser parser;
+        final MappingIterator<JsonNode> iterator;
 
         try {
-            parser = closer.register(factory.createParser(in));
-            return readNode(parser);
+            parser = closer.register(reader.getFactory().createParser(in));
+            iterator = reader.readValues(parser);
+            return readNode(closer.register(iterator));
         } finally {
             closer.close();
         }
@@ -155,41 +109,84 @@ public final class JsonNodeReader
     /**
      * Read a JSON value from a {@link Reader}
      *
-     * @param reader the reader
+     * @param r the reader
      * @return the value
      * @throws IOException malformed input, or problem encountered when reading
      * from the reader
      */
-    public JsonNode readFrom(final Reader reader)
+    public JsonNode fromReader(final Reader r)
         throws IOException
     {
         final Closer closer = Closer.create();
         final JsonParser parser;
+        final MappingIterator<JsonNode> iterator;
 
         try {
-            parser = closer.register(factory.createParser(reader));
-            return readNode(parser);
+            parser = closer.register(reader.getFactory().createParser(r));
+            iterator = reader.readValues(parser);
+            return readNode(closer.register(iterator));
         } finally {
             closer.close();
         }
     }
 
-    private JsonNode readNode(final JsonParser parser)
+    private static JsonNode readNode(final MappingIterator<JsonNode> iterator)
         throws IOException
     {
-        final JsonNode ret = parser.readValueAsTree();
-        if (!fullRead)
-            return ret;
-        final JsonLocation location = parser.getCurrentLocation();
+        final Object source = iterator.getParser().getInputSource();
+        final JsonParseExceptionBuilder builder
+            = new JsonParseExceptionBuilder(source);
+
+       builder.setMessage(BUNDLE.getMessage("read.noContent"));
+
+        if (!iterator.hasNextValue())
+            throw builder.build();
+
+        final JsonNode ret = iterator.nextValue();
+
+        builder.setMessage(BUNDLE.getMessage("read.trailingData"))
+            .setLocation(iterator.getCurrentLocation());
 
         try {
-            if (parser.nextToken() != null)
-                throw new IOException();
-        } catch (IOException e) {
-            throw new IOException(String.format("trailing input detected" +
-                " (last valid location: line %d, column %d)",
-                location.getLineNr(), location.getColumnNr()), e);
+            if (iterator.hasNextValue())
+                throw builder.build();
+        } catch (JsonParseException e) {
+            throw builder.setLocation(e.getLocation()).build();
         }
+
         return ret;
+    }
+
+    private static final class JsonParseExceptionBuilder
+        implements Builder<JsonParseException>
+    {
+        private String message = "";
+        private JsonLocation location;
+
+        private JsonParseExceptionBuilder(@Nonnull final Object source)
+        {
+            BUNDLE.checkNotNull(source, "read.nullArgument");
+            location = new JsonLocation(source, 0L, 1, 1);
+        }
+
+        private JsonParseExceptionBuilder setMessage(
+            @Nonnull final String message)
+        {
+            this.message = BUNDLE.checkNotNull(message, "read.nullArgument");
+            return this;
+        }
+
+        private JsonParseExceptionBuilder setLocation(
+            @Nonnull final JsonLocation location)
+        {
+            this.location = BUNDLE.checkNotNull(location, "read.nullArgument");
+            return this;
+        }
+
+        @Override
+        public JsonParseException build()
+        {
+            return new JsonParseException(message, location);
+        }
     }
 }

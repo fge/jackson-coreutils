@@ -19,6 +19,14 @@
 
 package com.github.fge.jackson;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.msgsimple.bundle.MessageBundle;
+import com.github.fge.msgsimple.bundle.PropertiesBundle;
+import com.google.common.base.Supplier;
+import com.google.common.collect.Lists;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
@@ -27,47 +35,94 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.List;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
 public final class JsonNodeReaderTest
 {
+    private final MessageBundle bundle
+        = PropertiesBundle.forPath("/com/github/fge/jackson/jsonNodeReader");
+
     @Test
     public void streamIsClosedOnRead()
         throws IOException
     {
-        final InputStream in = spy(stringToInputStream("[]"));
-        new JsonNodeReader().readFrom(in);
+        final Supplier<InputStream> supplier = provideInputStream("[]");
+        final InputStream in = spy(supplier.get());
+        final JsonNode node = new JsonNodeReader().fromInputStream(in);
         verify(in).close();
+        assertEquals(node, new ObjectMapper().readTree(supplier.get()));
     }
 
     @Test
     public void readerIsClosedOnRead()
         throws IOException
     {
-        final Reader reader = spy(new StringReader("[]"));
-        new JsonNodeReader().readFrom(reader);
+        final Supplier<Reader> supplier = provideReader("[]");
+        final Reader reader = spy(supplier.get());
+        final JsonNode node = new JsonNodeReader().fromReader(reader);
+        assertEquals(node, new ObjectMapper().readTree(supplier.get()));
         verify(reader).close();
     }
 
-    @Test
-    public void defaultReaderDoesFullRead()
-        throws UnsupportedEncodingException
+    @DataProvider
+    public Iterator<Object[]> getMalformedData()
     {
+        final List<Object[]> list = Lists.newArrayList();
+
+        list.add(new Object[] { "", "read.noContent"});
+        list.add(new Object[] { "[]{}", "read.trailingData"});
+        list.add(new Object[] { "[]]", "read.trailingData"});
+
+        return list.iterator();
+    }
+
+    @Test(dataProvider = "getMalformedData")
+    public void malformedDataThrowsExpectedException(final String input,
+        final String errmsg)
+        throws IOException
+    {
+        final Supplier<InputStream> supplier = provideInputStream(input);
+        final String message = bundle.getMessage(errmsg);
+
         final JsonNodeReader reader = new JsonNodeReader();
-        final InputStream in = stringToInputStream("[]]");
+
         try {
-            reader.readFrom(in);
-            fail("No exception thrown!");
-        } catch (IOException e) {
-            assertTrue(e.getMessage().startsWith("trailing input detected"));
+            reader.fromInputStream(supplier.get());
+            fail("No exception thrown!!");
+        } catch (JsonParseException e) {
+            assertEquals(e.getOriginalMessage(), message);
         }
     }
 
-    private static InputStream stringToInputStream(final String input)
-        throws UnsupportedEncodingException
+    private static Supplier<InputStream> provideInputStream(final String input)
     {
-        return new ByteArrayInputStream(input.getBytes("UTF-8"));
+        return new Supplier<InputStream>()
+        {
+            @Override
+            public InputStream get()
+            {
+                try {
+                    return new ByteArrayInputStream(input.getBytes("UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException("Unhandled exception", e);
+                }
+            }
+        };
+    }
+
+    private static Supplier<Reader> provideReader(final String input)
+    {
+        return new Supplier<Reader>()
+        {
+            @Override
+            public Reader get()
+            {
+                return new StringReader(input);
+            }
+        };
     }
 }

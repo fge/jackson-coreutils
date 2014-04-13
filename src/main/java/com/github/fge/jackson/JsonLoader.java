@@ -75,7 +75,7 @@ public final class JsonLoader
 
         try {
             in = closer.register(url.openStream());
-            ret = READER.readFrom(in);
+            ret = READER.fromInputStream(in);
         } finally {
             closer.close();
         }
@@ -93,7 +93,7 @@ public final class JsonLoader
     public static JsonNode fromURL(final URL url)
         throws IOException
     {
-        return READER.readFrom(url.openStream());
+        return READER.fromInputStream(url.openStream());
     }
 
     /**
@@ -112,7 +112,7 @@ public final class JsonLoader
 
         try {
             in = closer.register(new FileInputStream(path));
-            ret = READER.readFrom(in);
+            ret = READER.fromInputStream(in);
         } finally {
             closer.close();
         }
@@ -137,7 +137,7 @@ public final class JsonLoader
 
         try {
             in = closer.register(new FileInputStream(file));
-            ret = READER.readFrom(in);
+            ret = READER.fromInputStream(in);
         } finally {
             closer.close();
         }
@@ -155,7 +155,7 @@ public final class JsonLoader
     public static JsonNode fromReader(final Reader reader)
         throws IOException
     {
-        return READER.readFrom(reader);
+        return READER.fromReader(reader);
     }
 
     /**
