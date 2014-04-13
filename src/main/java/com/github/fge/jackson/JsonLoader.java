@@ -33,8 +33,7 @@ import java.net.URL;
 /**
  * Utility class to load JSON values from various sources as {@link JsonNode}s.
  *
- * <p>This class uses a {@link JsonNodeReader} with full read mode enabled to
- * parse JSON inputs.</p>
+ * <p>This class uses a {@link JsonNodeReader} to parse JSON inputs.</p>
  *
  * @see JsonNodeReader
  */
