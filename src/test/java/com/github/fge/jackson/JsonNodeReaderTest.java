@@ -18,7 +18,6 @@
 
 package com.github.fge.jackson;
 
-import com.fasterxml.jackson.core.JsonParser;
 import org.testng.annotations.Test;
 
 import java.io.ByteArrayInputStream;
@@ -27,8 +26,6 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
-import java.util.Collection;
-import java.util.EnumSet;
 
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
@@ -51,41 +48,6 @@ public final class JsonNodeReaderTest
         final Reader reader = spy(new StringReader("[]"));
         new JsonNodeReader().readFrom(reader);
         verify(reader).close();
-    }
-
-    @Test
-    public void parsingOptionsAreRespected()
-        throws IOException
-    {
-        final Collection<JsonParser.Feature> features
-            = EnumSet.of(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
-        final JsonNodeReader reader = new JsonNodeReader(features, false);
-        final InputStream in = spy(stringToInputStream("'hello'"));
-        assertEquals(reader.readFrom(in),
-            JacksonUtils.nodeFactory().textNode("hello"));
-    }
-
-    @Test
-    public void noFullReadDoesNotThrowExceptionOnExtraInput()
-        throws IOException
-    {
-        final JsonNodeReader reader = new JsonNodeReader(false);
-        reader.readFrom(stringToInputStream("[]]"));
-        assertTrue(true);
-    }
-
-    @Test
-    public void fullReadThrowsExceptionOnExtraInput()
-        throws UnsupportedEncodingException
-    {
-        final JsonNodeReader reader = new JsonNodeReader(true);
-        final InputStream in = stringToInputStream("[]]");
-        try {
-            reader.readFrom(in);
-            fail("No exception thrown!");
-        } catch (IOException e) {
-            assertTrue(e.getMessage().startsWith("trailing input detected"));
-        }
     }
 
     @Test
