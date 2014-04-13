@@ -4,6 +4,7 @@
   (example: `[]]`).
 * `JsonPointer` now supports Jackson {de,}serialization.
 * Methods from `JsonLoader` fail on trailing input
+* Update to gradle 1.11, wrapper.
 
 ## 1.5
 
