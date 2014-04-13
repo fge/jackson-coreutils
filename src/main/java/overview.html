@@ -25,9 +25,10 @@
 
 <h1>What this is</h1>
 
-<p>This package provides the following utilities over Jackson (2.1.x):</p>
+<p>This package provides the following utilities over Jackson (2.2.x):</p>
 
 <ul>
+    <li>"single" JSON text read from sources;</li>
     <li>an {@link com.google.common.base.Equivalence} over {@link
     com.fasterxml.jackson.databind.JsonNode} for numeric JSON values;</li>
     <li>a generalized <a href="http://tools.ietf.org/html/rfc6901">JSON
@@ -37,9 +38,25 @@
     com.fasterxml.jackson.databind.JsonNode}.</li>
 </ul>
 
+<h1>Single value reads</h1>
+
+<p>By default, when you read an input source with Jackson using an {@link
+com.fasterxml.jackson.databind.ObjectMapper}, the first JSON text is read and
+the rest is ignored. For instance, with input:</p>
+
+<pre>
+    []]
+</pre>
+
+<p>the read will stop after the empty array has been read.</p>
+
+<p>However, this may not be desirable. This package raises an error in this
+case. The central class performing such reads is {@link
+com.github.fge.jackson.JsonNodeReader}.</p>
+
 <h1>JSON numeric equivalence</h1>
 
-<p>Several proposed IETF drafts require that two JSON numeric values be
+<p>Several IETF RFCs, or drafts, require that two JSON numeric values be
 considered equal if their mathematical value is equal. Among these are JSON
 Schema and JSON Patch. But this is not the case with {@link
 com.fasterxml.jackson.databind.JsonNode}: <span style="font-family: monospace">1
