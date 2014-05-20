@@ -1,3 +1,8 @@
+## 1.7
+
+* Fix bug with resource loading: only JsonLoader.class was considered when
+  loading a resource; extend that to the context using Guava's Resources.
+
 ## 1.6
 
 * New `JsonNodeReader` class: full input read, failing on trailing content
