@@ -20,9 +20,11 @@
 package com.github.fge.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.Preconditions;
 import com.google.common.io.Closer;
 import com.google.common.io.Resources;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -58,16 +60,22 @@ public final class JsonLoader
      * does not exist, instead of letting a {@link NullPointerException} slip
      * through.</p>
      *
-     * @param resource The path to the resource
+     * <p>Note: this method uses Guava's {@link Resources#getResource(String)}
+     * to obtain a URL from the resource passed as an argument. As such, calling
+     * this method </p>
+     *
+     * @param resource the path to the resource
      * @return the JSON document at the resource
-     * @throws IOException if the resource does not exist or there was a
-     * problem loading it, or if the JSON document is invalid
+     * @throws IllegalArgumentException the resource does not exist
+     * @throws IOException there was a problem loading the resource, or the JSON
+     * document is invalid
      */
-    public static JsonNode fromResource(final String resource)
+    public static JsonNode fromResource(@Nonnull final String resource)
         throws IOException
     {
-        final String realResource
-            = INITIAL_SLASH.matcher(resource).replaceFirst("");
+        Preconditions.checkNotNull(resource);
+        final String realResource = INITIAL_SLASH.matcher(resource)
+            .replaceFirst("");
         final URL url = Resources.getResource(realResource);
 
         if (url == null)
