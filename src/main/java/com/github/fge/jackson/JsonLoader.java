@@ -21,6 +21,7 @@ package com.github.fge.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.Closer;
+import com.google.common.io.Resources;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,6 +30,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.URL;
+import java.util.regex.Pattern;
 
 /**
  * Utility class to load JSON values from various sources as {@link JsonNode}s.
@@ -39,6 +41,7 @@ import java.net.URL;
  */
 public final class JsonLoader
 {
+    private static final Pattern INITIAL_SLASH = Pattern.compile("^/");
     /**
      * The reader
      */
@@ -63,7 +66,9 @@ public final class JsonLoader
     public static JsonNode fromResource(final String resource)
         throws IOException
     {
-        final URL url = JsonLoader.class.getResource(resource);
+        final String realResource
+            = INITIAL_SLASH.matcher(resource).replaceFirst("");
+        final URL url = Resources.getResource(realResource);
 
         if (url == null)
             throw new IOException("resource " + resource + " not found");
