@@ -25,7 +25,7 @@ This package is meant to be used with Jackson 2.2.x. It provides the three follo
 
 ## Versions
 
-The current verson is **1.6**. Its Javadoc is [available
+The current verson is **1.7**. Its Javadoc is [available
 online](http://fge.github.io/jackson-coreutils/index.html).
 
 Please see file `RELEASE-NOTES.md` for more information.
@@ -36,7 +36,7 @@ With Gradle:
 
 ```groovy
 dependencies {
-    compile(group: "com.github.fge", name: "jackson-coreutils", version: "yourVersionHere");
+    compile(group: "com.github.fge", name: "jackson-coreutils", version: "1.7");
 }
 ```
 
@@ -46,7 +46,7 @@ With Maven:
 <dependency>
     <groupId>com.github.fge</groupId>
     <artifactId>jackson-coreutils</artifactId>
-    <version>yourVersionHere</version>
+    <version>1.7</version>
 </dependency>
 ```
 
