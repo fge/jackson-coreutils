@@ -20,9 +20,9 @@
 package com.github.fge.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.io.Closer;
-import com.google.common.io.Resources;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
  */
 public final class JsonLoader
 {
-    private static final Pattern INITIAL_SLASH = Pattern.compile("^/");
+    private static final Pattern INITIAL_SLASH = Pattern.compile("^/+");
     /**
      * The reader
      */
@@ -56,17 +56,15 @@ public final class JsonLoader
     /**
      * Read a {@link JsonNode} from a resource path.
      *
-     * <p>This method explicitly throws an {@link IOException} if the resource
-     * does not exist, instead of letting a {@link NullPointerException} slip
-     * through.</p>
+     * <p>This method first tries and loads the resource using {@link
+     * Class#getResource(String)}; if not found, is tries and uses the context
+     * classloader and if this is not found, this class's classloader.</p>
      *
-     * <p>Note: this method uses Guava's {@link Resources#getResource(String)}
-     * to obtain a URL from the resource passed as an argument. As such, calling
-     * this method </p>
+     * <p>This method throws an {@link IOException} if the resource does not
+     * exist.</p>
      *
      * @param resource the path to the resource
      * @return the JSON document at the resource
-     * @throws IllegalArgumentException the resource does not exist
      * @throws IOException there was a problem loading the resource, or the JSON
      * document is invalid
      */
@@ -74,10 +72,16 @@ public final class JsonLoader
         throws IOException
     {
         Preconditions.checkNotNull(resource);
-        final String realResource = INITIAL_SLASH.matcher(resource)
-            .replaceFirst("");
-        final URL url = Resources.getResource(realResource);
-
+        URL url;
+        url = JsonLoader.class.getResource(resource);
+        if (url == null) {
+            final ClassLoader classLoader = Objects.firstNonNull(
+                Thread.currentThread().getContextClassLoader(),
+                JsonLoader.class.getClassLoader()
+            );
+            final String s = INITIAL_SLASH.matcher(resource).replaceFirst("");
+            url = classLoader.getResource(s);
+        }
         if (url == null)
             throw new IOException("resource " + resource + " not found");
 
