@@ -63,8 +63,11 @@ public final class JsonLoader
      * <p>This method throws an {@link IOException} if the resource does not
      * exist.</p>
      *
-     * @param resource the path to the resource
+     * @param resource the path to the resource (<strong>must</strong> begin
+     * with a {@code /})
      * @return the JSON document at the resource
+     * @throws IllegalArgumentException resource path does not begin with a
+     * {@code /}
      * @throws IOException there was a problem loading the resource, or the JSON
      * document is invalid
      */
@@ -72,6 +75,8 @@ public final class JsonLoader
         throws IOException
     {
         Preconditions.checkNotNull(resource);
+        Preconditions.checkArgument(resource.startsWith("/"),
+            "resource path does not start with a '/'");
         URL url;
         url = JsonLoader.class.getResource(resource);
         if (url == null) {
