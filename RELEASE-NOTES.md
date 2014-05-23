@@ -1,3 +1,8 @@
+## 1.8
+
+* Really fix resource loading; first attempt to use the old system for loading,
+  only if it fails use the context class loader. Also require an initial slash.
+
 ## 1.7
 
 * Fix bug with resource loading: only JsonLoader.class was considered when
