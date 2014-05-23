@@ -4,8 +4,6 @@ This project, as of version 1.5, is licensed under both LGPLv3 and ASL 2.0. See
 file LICENSE for more details. Versions 1.0 and lower are licensed under LGPLv3
 only.
 
-**Note the "L" in "LGPL". LGPL AND GPL ARE QUITE DIFFERENT!**
-
 This project uses [Gradle](http://www.gradle.org) as a build system. See file `BUILD.md` for
 details.
 
@@ -25,7 +23,7 @@ This package is meant to be used with Jackson 2.2.x. It provides the three follo
 
 ## Versions
 
-The current verson is **1.7**. Its Javadoc is [available
+The current verson is **1.8**. Its Javadoc is [available
 online](http://fge.github.io/jackson-coreutils/index.html).
 
 Please see file `RELEASE-NOTES.md` for more information.
@@ -36,7 +34,7 @@ With Gradle:
 
 ```groovy
 dependencies {
-    compile(group: "com.github.fge", name: "jackson-coreutils", version: "1.7");
+    compile(group: "com.github.fge", name: "jackson-coreutils", version: "1.8");
 }
 ```
 
@@ -46,7 +44,7 @@ With Maven:
 <dependency>
     <groupId>com.github.fge</groupId>
     <artifactId>jackson-coreutils</artifactId>
-    <version>1.7</version>
+    <version>1.8</version>
 </dependency>
 ```
 
@@ -78,7 +76,7 @@ This package provides a `JsonNodeReader` class which will fail with an exception
 When reading JSON into a `JsonNode`, Jackson will serialize `1` as an `IntNode` but `1.0` as a
 `DoubleNode` (or a `DecimalNode`).
 
-Understandably so, Jackson <b>will not</b> consider such nodes to be equal, since they do not share
+Understandably so, Jackson <b>will not</b> consider such nodes to be equal, since they are not of
 the same class. But, understandably so as well, some uses of JSON out there, including [JSON
 Schema](http://tools.ietf.org/html/draft-zyp-json-schema-04) and [JSON
 Patch](http://tools.ietf.org/html/rfc6902)'s test operation, want to consider such nodes as equal.
@@ -176,7 +174,7 @@ There are several ways you can build one:
 ```java
 // Build from an input string -- potentially throws JsonPointerException on malformed inputs
 final JsonPointer ptr = new JsonPointer("/foo/bar");
-// Build from a series of raw tokens
+// Build from a series of raw tokens -- never throws an exception
 final JsonPointer ptr = JsonPointer.of("foo", "bar", 1); // Yields pointer "/foo/bar/1"
 // Get another pointer's parent:
 final JsonPointer parent = ptr.parent();
