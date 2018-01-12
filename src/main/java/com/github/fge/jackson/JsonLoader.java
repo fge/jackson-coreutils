@@ -20,11 +20,11 @@
 package com.github.fge.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import com.google.common.io.Closer;
 
 import javax.annotation.Nonnull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -80,7 +80,7 @@ public final class JsonLoader
         URL url;
         url = JsonLoader.class.getResource(resource);
         if (url == null) {
-            final ClassLoader classLoader = Objects.firstNonNull(
+            final ClassLoader classLoader = firstNonNull(
                 Thread.currentThread().getContextClassLoader(),
                 JsonLoader.class.getClassLoader()
             );
@@ -102,6 +102,20 @@ public final class JsonLoader
         }
 
         return ret;
+    }
+
+    /**
+     * Returns the first non-null parameter.
+     *
+     * Implementation note: Avoids the Guava method of the same name, to mitigate 'Dependency Hell'.
+     * This can be replaced by {@code MoreObjects.firstNonNull} when moving to Guava >= 18.0
+     * (Tip: Guava 20 seems like a good choice if Java 6 support is still necessary.)
+     *
+     * @throws NullPointerException if both are null.
+     */
+    private static ClassLoader firstNonNull(ClassLoader first, ClassLoader second)
+    {
+        return first != null ? first : Preconditions.checkNotNull(second);
     }
 
     /**
