@@ -22,10 +22,10 @@ package com.github.fge.jackson;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableMap;
 
+import java.util.Collections;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -98,13 +98,13 @@ public enum NodeType
         TOKEN_MAP.put(JsonToken.START_OBJECT, OBJECT);
         TOKEN_MAP.put(JsonToken.VALUE_STRING, STRING);
 
-        final ImmutableMap.Builder<String, NodeType> builder
-            = ImmutableMap.builder();
+        final Map<String, NodeType> builder
+            = new HashMap<String, NodeType>();
 
         for (final NodeType type: NodeType.values())
             builder.put(type.name, type);
 
-        NAME_MAP = builder.build();
+        NAME_MAP = Collections.unmodifiableMap(builder);
     }
 
     NodeType(final String name)
@@ -140,8 +140,9 @@ public enum NodeType
     {
         final JsonToken token = node.asToken();
         final NodeType ret = TOKEN_MAP.get(token);
-
-        Preconditions.checkNotNull(ret, "unhandled token type " + token);
+        if (ret == null) {
+            throw new NullPointerException("unhandled token type " + token);
+        }
 
         return ret;
     }

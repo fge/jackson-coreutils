@@ -21,10 +21,11 @@ package com.github.fge.jackson.jsonpointer;
 
 import com.github.fge.msgsimple.bundle.MessageBundle;
 import com.github.fge.msgsimple.load.MessageBundles;
-import com.google.common.collect.ImmutableList;
 
 import javax.annotation.concurrent.Immutable;
 import java.nio.CharBuffer;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -55,14 +56,14 @@ public final class ReferenceToken
     /**
      * List of encoding characters in a cooked token
      */
-    private static final List<Character> ENCODED = ImmutableList.of('0', '1');
+    private static final List<Character> ENCODED = Collections.unmodifiableList(Arrays.asList('0', '1'));
 
     /**
      * List of sequences to encode in a raw token
      *
      * <p>This list and {@link #ENCODED} have matching indices on purpose.</p>
      */
-    private static final List<Character> DECODED = ImmutableList.of('~', '/');
+    private static final List<Character> DECODED = Collections.unmodifiableList(Arrays.asList('~', '/'));
 
     /**
      * The cooked representation of that token

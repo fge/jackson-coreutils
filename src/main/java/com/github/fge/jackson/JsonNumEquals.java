@@ -20,15 +20,15 @@
 package com.github.fge.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Equivalence;
-import com.google.common.collect.Sets;
 
+import javax.annotation.Nullable;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * An {@link Equivalence} strategy for JSON Schema equality
+ * An {@code com.google.common.base.Equivalence} like strategy for JSON Schema equality
  *
  * <p>{@link JsonNode} does a pretty good job of obeying the  {@link
  * Object#equals(Object) equals()}/{@link Object#hashCode() hashCode()}
@@ -41,21 +41,50 @@ import java.util.Set;
  * kind of equality.</p>
  */
 public final class JsonNumEquals
-    extends Equivalence<JsonNode>
 {
-    private static final Equivalence<JsonNode> INSTANCE
+    private static final JsonNumEquals INSTANCE
         = new JsonNumEquals();
 
     private JsonNumEquals()
     {
     }
 
-    public static Equivalence<JsonNode> getInstance()
+    public static JsonNumEquals getInstance()
     {
         return INSTANCE;
     }
 
-    @Override
+    /**
+     * Returns {@code true} if the given objects are considered equivalent.
+     *
+     * <p>The {@code equivalent} method implements an equivalence relation on object references:
+     *
+     * <ul>
+     * <li>It is <i>reflexive</i>: for any reference {@code x}, including null, {@code
+     *     equivalent(x, x)} returns {@code true}.
+     * <li>It is <i>symmetric</i>: for any references {@code x} and {@code y}, {@code
+     *     equivalent(x, y) == equivalent(y, x)}.
+     * <li>It is <i>transitive</i>: for any references {@code x}, {@code y}, and {@code z}, if
+     *     {@code equivalent(x, y)} returns {@code true} and {@code equivalent(y, z)} returns {@code
+     *     true}, then {@code equivalent(x, z)} returns {@code true}.
+     * <li>It is <i>consistent</i>: for any references {@code x} and {@code y}, multiple invocations
+     *     of {@code equivalent(x, y)} consistently return {@code true} or consistently return {@code
+     *     false} (provided that neither {@code x} nor {@code y} is modified).
+     * </ul>
+     * @param a x
+     * @param b y
+     * @return whether nodes are equal according to IETF RFCs
+     */
+    public final boolean equivalent(@Nullable JsonNode a, @Nullable JsonNode b) {
+        if (a == b) {
+            return true;
+        }
+        if (a == null || b == null) {
+            return false;
+        }
+        return doEquivalent(a, b);
+    }
+
     protected boolean doEquivalent(final JsonNode a, final JsonNode b)
     {
         /*
@@ -93,7 +122,31 @@ public final class JsonNumEquals
         return typeA == NodeType.ARRAY ? arrayEquals(a, b) : objectEquals(a, b);
     }
 
-    @Override
+    /**
+     * Returns a hash code for {@code t}.
+     *
+     * <p>The {@code hash} has the following properties:
+     * <ul>
+     * <li>It is <i>consistent</i>: for any reference {@code x}, multiple invocations of
+     *     {@code hash(x}} consistently return the same value provided {@code x} remains unchanged
+     *     according to the definition of the equivalence. The hash need not remain consistent from
+     *     one execution of an application to another execution of the same application.
+     * <li>It is <i>distributable across equivalence</i>: for any references {@code x} and {@code y},
+     *     if {@code equivalent(x, y)}, then {@code hash(x) == hash(y)}. It is <i>not</i> necessary
+     *     that the hash be distributable across <i>inequivalence</i>. If {@code equivalence(x, y)}
+     *     is false, {@code hash(x) == hash(y)} may still be true.
+     * <li>{@code hash(null)} is {@code 0}.
+     * </ul>
+     * @param t node to hash
+     * @return hash
+     */
+    public final int hash(@Nullable JsonNode t) {
+        if (t == null) {
+            return 0;
+        }
+        return doHash(t);
+    }
+
     protected int doHash(final JsonNode t)
     {
         /*
@@ -183,13 +236,32 @@ public final class JsonNumEquals
         /*
          * Grab the key set from the first node
          */
-        final Set<String> keys = Sets.newHashSet(a.fieldNames());
-
+        final Set<String> keys = new HashSet<String>();
+        Iterator<String> iterator1 = a.fieldNames();
+        while (iterator1.hasNext()) {
+            final String next = iterator1.next();
+            if (next != null) {
+                keys.add(next);
+            } else {
+                throw new NullPointerException();
+            }
+        }
+//        final Set<String> keys = Sets.newHashSet(a.fieldNames());
         /*
          * Grab the key set from the second node, and see if both sets are the
          * same. If not, objects are not equal, no need to check for children.
          */
-        final Set<String> set = Sets.newHashSet(b.fieldNames());
+        final Set<String> set = new HashSet<String>();
+        Iterator<String> iterator2 = b.fieldNames();
+        while (iterator2.hasNext()) {
+            final String next = iterator2.next();
+            if (next != null) {
+            set.add(next);
+            } else {
+                throw new NullPointerException();
+            }
+        }
+
         if (!set.equals(keys))
             return false;
 

@@ -22,11 +22,9 @@ package com.github.fge.jackson.jsonpointer;
 import com.fasterxml.jackson.core.TreeNode;
 import com.github.fge.msgsimple.bundle.MessageBundle;
 import com.github.fge.msgsimple.load.MessageBundles;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import org.testng.annotations.Test;
 
-import java.util.List;
+import java.util.*;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -65,7 +63,7 @@ public final class TreePointerTest
         throws JsonPointerException
     {
         assertEquals(TreePointer.tokensFromInput(""),
-            ImmutableList.<ReferenceToken>of());
+                Collections.<ReferenceToken>emptyList());
     }
 
     @Test
@@ -73,7 +71,7 @@ public final class TreePointerTest
         throws JsonPointerException
     {
         final List<ReferenceToken> expected
-            = ImmutableList.of(ReferenceToken.fromCooked(""));
+            = Collections.singletonList(ReferenceToken.fromCooked(""));
         final List<ReferenceToken> actual = TreePointer.tokensFromInput("/");
 
         assertEquals(actual, expected);
@@ -83,11 +81,11 @@ public final class TreePointerTest
     public void tokenListRespectsOrder()
         throws JsonPointerException
     {
-        final List<ReferenceToken> expected = ImmutableList.of(
+        final List<ReferenceToken> expected = Collections.unmodifiableList(Arrays.asList(
             ReferenceToken.fromRaw("/"),
             ReferenceToken.fromRaw("~"),
             ReferenceToken.fromRaw("x")
-        );
+        ));
         final List<ReferenceToken> actual
             = TreePointer.tokensFromInput("/~1/~0/x");
 
@@ -98,11 +96,11 @@ public final class TreePointerTest
     public void tokenListAccountsForEmptyTokens()
         throws JsonPointerException
     {
-        final List<ReferenceToken> expected = ImmutableList.of(
+        final List<ReferenceToken> expected = Collections.unmodifiableList(Arrays.asList(
             ReferenceToken.fromRaw("a"),
             ReferenceToken.fromRaw(""),
             ReferenceToken.fromRaw("b")
-        );
+        ));
         final List<ReferenceToken> actual
             = TreePointer.tokensFromInput("/a//b");
 
@@ -121,7 +119,7 @@ public final class TreePointerTest
         when(token1.get(any(TreeNode.class))).thenReturn(null);
 
         final DummyPointer ptr = new DummyPointer(missing,
-            ImmutableList.of(token1, token2));
+            Collections.unmodifiableList(Arrays.asList(token1, token2)));
 
         final TreeNode node = mock(TreeNode.class);
         final TreeNode ret = ptr.get(node);
@@ -143,7 +141,7 @@ public final class TreePointerTest
         when(token1.get(any(TreeNode.class))).thenReturn(null);
 
         final DummyPointer ptr = new DummyPointer(missing,
-            ImmutableList.of(token1, token2));
+                Collections.unmodifiableList(Arrays.asList(token1, token2)));
 
         final TreeNode node = mock(TreeNode.class);
         final TreeNode ret = ptr.path(node);
@@ -156,7 +154,7 @@ public final class TreePointerTest
     @Test
     public void treePointerCanTellWhetherItIsEmpty()
     {
-        final List<TokenResolver<TreeNode>> list = Lists.newArrayList();
+        final List<TokenResolver<TreeNode>> list = new ArrayList<TokenResolver<TreeNode>>();
 
         assertTrue(new DummyPointer(null, list).isEmpty());
 
@@ -170,7 +168,7 @@ public final class TreePointerTest
     @Test
     public void treeIsUnalteredWhenOriginalListIsAltered()
     {
-        final List<TokenResolver<TreeNode>> list = Lists.newArrayList();
+        final List<TokenResolver<TreeNode>> list = new ArrayList<TokenResolver<TreeNode>>();
         final DummyPointer dummy = new DummyPointer(null, list);
 
         @SuppressWarnings("unchecked")

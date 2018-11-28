@@ -22,6 +22,8 @@ package com.github.fge.jackson.jsonpointer;
 public final class JsonPointerException
     extends Exception
 {
+    static final long serialVersionUID = -1835450876546372005L;
+
     public JsonPointerException(final String message)
     {
         super(message);

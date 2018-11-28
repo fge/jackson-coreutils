@@ -26,17 +26,13 @@ import com.github.fge.jackson.NodeType;
 import com.github.fge.jackson.SampleNodeProvider;
 import com.github.fge.msgsimple.bundle.MessageBundle;
 import com.github.fge.msgsimple.load.MessageBundles;
-import com.google.common.collect.Lists;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.EnumSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.testng.Assert.*;
 
@@ -70,7 +66,7 @@ public final class JsonPointerTest
     @DataProvider
     public Iterator<Object[]> rawPointers()
     {
-        final List<Object[]> list = Lists.newArrayList();
+        final List<Object[]> list = new ArrayList<Object[]>();
         final JsonNode testNode = testData.get("pointers");
         final Map<String, JsonNode> map = JacksonUtils.asMap(testNode);
 
@@ -93,7 +89,7 @@ public final class JsonPointerTest
     @DataProvider
     public Iterator<Object[]> uriPointers()
     {
-        final List<Object[]> list = Lists.newArrayList();
+        final List<Object[]> list = new ArrayList<Object[]>();
         final JsonNode testNode = testData.get("uris");
         final Map<String, JsonNode> map = JacksonUtils.asMap(testNode);
 
@@ -185,7 +181,7 @@ public final class JsonPointerTest
     @DataProvider
     public Iterator<Object[]> parentTestData()
     {
-        final List<Object[]> list = Lists.newArrayList();
+        final List<Object[]> list = new ArrayList<Object[]>();
 
         // Empty
         list.add(new Object[] { JsonPointer.empty(), JsonPointer.empty() });

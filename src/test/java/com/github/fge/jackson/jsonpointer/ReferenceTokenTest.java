@@ -21,10 +21,11 @@ package com.github.fge.jackson.jsonpointer;
 
 import com.github.fge.msgsimple.bundle.MessageBundle;
 import com.github.fge.msgsimple.load.MessageBundles;
-import com.google.common.collect.ImmutableList;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 import static org.testng.Assert.*;
@@ -81,14 +82,14 @@ public final class ReferenceTokenTest
     @DataProvider
     public Iterator<Object[]> cookedRaw()
     {
-        return ImmutableList.of(
+        return Collections.unmodifiableList(Arrays.asList(
             new Object[] { "~0", "~" },
             new Object[] { "~1", "/" },
             new Object[] { "", "" },
             new Object[] { "~0user", "~user" },
             new Object[] { "foobar", "foobar" },
             new Object[] { "~1var~1lib~1mysql", "/var/lib/mysql" }
-        ).iterator();
+        )).iterator();
     }
 
     @Test(dataProvider = "cookedRaw")
@@ -106,11 +107,11 @@ public final class ReferenceTokenTest
     @DataProvider
     public Iterator<Object[]> indices()
     {
-        return ImmutableList.of(
+        return Collections.unmodifiableList(Arrays.asList(
             new Object[] { 0, "0" },
             new Object[] { -1, "-1" },
             new Object[]{ 13, "13" }
-        ).iterator();
+        )).iterator();
     }
 
     @Test(dataProvider = "indices")

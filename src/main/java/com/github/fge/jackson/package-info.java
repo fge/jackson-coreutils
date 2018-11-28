@@ -34,7 +34,7 @@
  * com.fasterxml.jackson.databind.DeserializationFeature#USE_BIG_DECIMAL_FOR_FLOATS}.
  * </p>
  *
- * <p>{@link com.github.fge.jackson.JsonNumEquals} is an {@link
+ * <p>{@link com.github.fge.jackson.JsonNumEquals} is an {@code
  * com.google.common.base.Equivalence} over {@link
  * com.fasterxml.jackson.databind.JsonNode} for recursive equivalence of JSON
  * number values.</p>
