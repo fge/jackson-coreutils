@@ -20,9 +20,6 @@
 package com.github.fge.jackson;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Objects;
-import com.google.common.base.Preconditions;
-import com.google.common.io.Closer;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -74,31 +71,39 @@ public final class JsonLoader
     public static JsonNode fromResource(@Nonnull final String resource)
         throws IOException
     {
-        Preconditions.checkNotNull(resource);
-        Preconditions.checkArgument(resource.startsWith("/"),
-            "resource path does not start with a '/'");
+        if (resource == null) {
+            throw new NullPointerException();
+        }
+        if (!resource.startsWith("/")) {
+            throw new IllegalArgumentException("resource path does not start with a '/'");
+        }
         URL url;
         url = JsonLoader.class.getResource(resource);
         if (url == null) {
-            final ClassLoader classLoader = Objects.firstNonNull(
-                Thread.currentThread().getContextClassLoader(),
-                JsonLoader.class.getClassLoader()
-            );
+            final ClassLoader classLoader;
+            if (Thread.currentThread().getContextClassLoader() != null) {
+                classLoader = Thread.currentThread().getContextClassLoader();
+            } else if (JsonLoader.class.getClassLoader() != null) {
+                classLoader = JsonLoader.class.getClassLoader();
+            } else {
+                throw new NullPointerException();
+            }
             final String s = INITIAL_SLASH.matcher(resource).replaceFirst("");
             url = classLoader.getResource(s);
         }
         if (url == null)
             throw new IOException("resource " + resource + " not found");
 
-        final Closer closer = Closer.create();
         final JsonNode ret;
-        final InputStream in;
+        InputStream in = null;
 
         try {
-            in = closer.register(url.openStream());
+            in = url.openStream();
             ret = READER.fromInputStream(in);
         } finally {
-            closer.close();
+            if (in != null) {
+                in.close();
+            }
         }
 
         return ret;
@@ -127,15 +132,16 @@ public final class JsonLoader
     public static JsonNode fromPath(final String path)
         throws IOException
     {
-        final Closer closer = Closer.create();
         final JsonNode ret;
-        final FileInputStream in;
+        FileInputStream in = null;
 
         try {
-            in = closer.register(new FileInputStream(path));
+            in = new FileInputStream(path);
             ret = READER.fromInputStream(in);
         } finally {
-            closer.close();
+            if (in != null) {
+                in.close();
+            }
         }
 
         return ret;
@@ -152,15 +158,16 @@ public final class JsonLoader
     public static JsonNode fromFile(final File file)
         throws IOException
     {
-        final Closer closer = Closer.create();
         final JsonNode ret;
-        final FileInputStream in;
+        FileInputStream in = null;
 
         try {
-            in = closer.register(new FileInputStream(file));
+            in = new FileInputStream(file);
             ret = READER.fromInputStream(in);
         } finally {
-            closer.close();
+            if (in != null) {
+                in.close();
+            }
         }
 
         return ret;

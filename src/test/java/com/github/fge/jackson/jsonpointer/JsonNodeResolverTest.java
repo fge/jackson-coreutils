@@ -26,10 +26,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.fge.jackson.JacksonUtils;
 import com.github.fge.jackson.NodeType;
 import com.github.fge.jackson.SampleNodeProvider;
-import com.google.common.collect.Lists;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -104,7 +104,7 @@ public final class JsonNodeResolverTest
     @DataProvider
     public Iterator<Object[]> invalidIndices()
     {
-        final List<Object[]> list = Lists.newArrayList();
+        final List<Object[]> list = new ArrayList<Object[]>();
 
         list.add(new Object[] { "-1" });
         list.add(new Object[] { "232398087298731987987232" });

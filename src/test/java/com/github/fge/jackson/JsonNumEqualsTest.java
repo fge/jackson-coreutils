@@ -23,12 +23,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.google.common.collect.Lists;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -49,7 +49,7 @@ public final class JsonNumEqualsTest
     @DataProvider
     public Iterator<Object[]> getInputs()
     {
-        final List<Object[]> list = Lists.newArrayList();
+        final List<Object[]> list = new ArrayList<Object[]>();
 
         JsonNode reference;
 
@@ -86,9 +86,9 @@ public final class JsonNumEqualsTest
         final JsonNode node)
     {
         final ObjectNode node1 = FACTORY.objectNode();
-        node1.put("foo", reference);
+        node1.set("foo", reference);
         final ObjectNode node2 = FACTORY.objectNode();
-        node2.put("foo", node);
+        node2.set("foo", node);
 
         assertTrue(JsonNumEquals.getInstance().equivalent(node1, node2));
     }

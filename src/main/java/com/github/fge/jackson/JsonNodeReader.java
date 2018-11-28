@@ -30,7 +30,6 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.github.fge.Builder;
 import com.github.fge.msgsimple.bundle.MessageBundle;
 import com.github.fge.msgsimple.bundle.PropertiesBundle;
-import com.google.common.io.Closer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
@@ -71,7 +70,7 @@ public final class JsonNodeReader
     public JsonNodeReader(final ObjectMapper mapper)
     {
         reader = mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true)
-            .reader(JsonNode.class);
+            .readerFor(JsonNode.class);
     }
 
     /**
@@ -93,16 +92,20 @@ public final class JsonNodeReader
     public JsonNode fromInputStream(final InputStream in)
         throws IOException
     {
-        final Closer closer = Closer.create();
-        final JsonParser parser;
-        final MappingIterator<JsonNode> iterator;
+        JsonParser parser = null;
+        MappingIterator<JsonNode> iterator = null;
 
         try {
-            parser = closer.register(reader.getFactory().createParser(in));
+            parser = reader.getFactory().createParser(in);
             iterator = reader.readValues(parser);
-            return readNode(closer.register(iterator));
+            return readNode(iterator);
         } finally {
-            closer.close();
+            if (parser != null) {
+                parser.close();
+            }
+            if (iterator != null) {
+                iterator.close();
+            }
         }
     }
 
@@ -117,16 +120,20 @@ public final class JsonNodeReader
     public JsonNode fromReader(final Reader r)
         throws IOException
     {
-        final Closer closer = Closer.create();
-        final JsonParser parser;
-        final MappingIterator<JsonNode> iterator;
+        JsonParser parser = null;
+        MappingIterator<JsonNode> iterator = null;
 
         try {
-            parser = closer.register(reader.getFactory().createParser(r));
+            parser = reader.getFactory().createParser(r);
             iterator = reader.readValues(parser);
-            return readNode(closer.register(iterator));
+            return readNode(iterator);
         } finally {
-            closer.close();
+            if (parser != null) {
+                parser.close();
+            }
+            if (iterator != null) {
+                iterator.close();
+            }
         }
     }
 

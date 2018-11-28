@@ -105,13 +105,10 @@ artifacts {
     archives javadocJar;
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = "1.11";
-    distributionUrl = "http://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip";
-}
-
-task pom << {
-    pom {}.writeTo("${projectDir}/pom.xml");
+task pom {
+	doLast {
+		pom {}.writeTo("${projectDir}/pom.xml");
+	}
 }
 
 /*
@@ -126,18 +123,20 @@ project.ext {
     sonatypeSnapshots = "https://oss.sonatype.org/content/repositories/snapshots/";
 };
 
-task checkSigningRequirements << {
-    def requiredProperties = [ "sonatypeUsername", "sonatypePassword" ];
-    def noDice = false;
-    requiredProperties.each {
-        if (project.properties[it] == null) {
-            noDice = true;
-            System.err.printf("property \"%s\" is not defined!")
-        }
-    }
-    if (noDice)
-        throw new IllegalStateException("missing required properties for " +
-            "upload");
+task checkSigningRequirements {
+	doLast {
+		def requiredProperties = [ "sonatypeUsername", "sonatypePassword" ];
+		def noDice = false;
+		requiredProperties.each {
+			if (project.properties[it] == null) {
+				noDice = true;
+				System.err.printf("property \"%s\" is not defined!")
+			}
+		}
+		if (noDice)
+			throw new IllegalStateException("missing required properties for " +
+				"upload");
+	}
 }
 
 uploadArchives {
